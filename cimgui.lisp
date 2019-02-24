@@ -1,8 +1,422 @@
-(cl:defpackage #:ig
-  (:use))
-
 (cl:in-package :ig)
 
+(cl:defmacro defanonenum (cl:&body enums)
+   "Converts anonymous enums to defconstants."
+  `(cl:progn ,@(cl:loop for value in enums
+                        for index = 0 then (cl:1+ index)
+                        when (cl:listp value) do (cl:setf index (cl:second value)
+                                                          value (cl:first value))
+                        collect `(cl:defconstant ,value ,index))))
+
+(cffi:defcstruct ImVec2
+	(x :float)
+	(y :float))
+
+(cffi:defcstruct ImVec4
+	(x :float)
+	(y :float)
+	(z :float)
+	(w :float))
+
+(defanonenum 
+	(ImGuiWindowFlags_NoTitleBar #.(cl:ash 1 0))
+	(ImGuiWindowFlags_NoResize #.(cl:ash 1 1))
+	(ImGuiWindowFlags_NoMove #.(cl:ash 1 2))
+	(ImGuiWindowFlags_NoScrollbar #.(cl:ash 1 3))
+	(ImGuiWindowFlags_NoScrollWithMouse #.(cl:ash 1 4))
+	(ImGuiWindowFlags_NoCollapse #.(cl:ash 1 5))
+	(ImGuiWindowFlags_AlwaysAutoResize #.(cl:ash 1 6))
+	(ImGuiWindowFlags_NoSavedSettings #.(cl:ash 1 8))
+	(ImGuiWindowFlags_NoInputs #.(cl:ash 1 9))
+	(ImGuiWindowFlags_MenuBar #.(cl:ash 1 10))
+	(ImGuiWindowFlags_HorizontalScrollbar #.(cl:ash 1 11))
+	(ImGuiWindowFlags_NoFocusOnAppearing #.(cl:ash 1 12))
+	(ImGuiWindowFlags_NoBringToFrontOnFocus #.(cl:ash 1 13))
+	(ImGuiWindowFlags_AlwaysVerticalScrollbar #.(cl:ash 1 14))
+	(ImGuiWindowFlags_AlwaysHorizontalScrollbar #.(cl:ash 1 15))
+	(ImGuiWindowFlags_AlwaysUseWindowPadding #.(cl:ash 1 16))
+	(ImGuiWindowFlags_ResizeFromAnySide #.(cl:ash 1 17)))
+
+(defanonenum 
+	(ImGuiInputTextFlags_CharsDecimal #.(cl:ash 1 0))
+	(ImGuiInputTextFlags_CharsHexadecimal #.(cl:ash 1 1))
+	(ImGuiInputTextFlags_CharsUppercase #.(cl:ash 1 2))
+	(ImGuiInputTextFlags_CharsNoBlank #.(cl:ash 1 3))
+	(ImGuiInputTextFlags_AutoSelectAll #.(cl:ash 1 4))
+	(ImGuiInputTextFlags_EnterReturnsTrue #.(cl:ash 1 5))
+	(ImGuiInputTextFlags_CallbackCompletion #.(cl:ash 1 6))
+	(ImGuiInputTextFlags_CallbackHistory #.(cl:ash 1 7))
+	(ImGuiInputTextFlags_CallbackAlways #.(cl:ash 1 8))
+	(ImGuiInputTextFlags_CallbackCharFilter #.(cl:ash 1 9))
+	(ImGuiInputTextFlags_AllowTabInput #.(cl:ash 1 10))
+	(ImGuiInputTextFlags_CtrlEnterForNewLine #.(cl:ash 1 11))
+	(ImGuiInputTextFlags_NoHorizontalScroll #.(cl:ash 1 12))
+	(ImGuiInputTextFlags_AlwaysInsertMode #.(cl:ash 1 13))
+	(ImGuiInputTextFlags_ReadOnly #.(cl:ash 1 14))
+	(ImGuiInputTextFlags_Password #.(cl:ash 1 15))
+	(ImGuiInputTextFlags_NoUndoRedo #.(cl:ash 1 16)))
+
+(defanonenum 
+	(ImGuiTreeNodeFlags_Selected #.(cl:ash 1 0))
+	(ImGuiTreeNodeFlags_Framed #.(cl:ash 1 1))
+	(ImGuiTreeNodeFlags_AllowItemOverlap #.(cl:ash 1 2))
+	(ImGuiTreeNodeFlags_NoTreePushOnOpen #.(cl:ash 1 3))
+	(ImGuiTreeNodeFlags_NoAutoOpenOnLog #.(cl:ash 1 4))
+	(ImGuiTreeNodeFlags_DefaultOpen #.(cl:ash 1 5))
+	(ImGuiTreeNodeFlags_OpenOnDoubleClick #.(cl:ash 1 6))
+	(ImGuiTreeNodeFlags_OpenOnArrow #.(cl:ash 1 7))
+	(ImGuiTreeNodeFlags_Leaf #.(cl:ash 1 8))
+	(ImGuiTreeNodeFlags_Bullet #.(cl:ash 1 9))
+	(ImGuiTreeNodeFlags_FramePadding #.(cl:ash 1 10))
+	(ImGuiTreeNodeFlags_CollapsingHeader (cl:logior ImGuiTreeNodeFlags_Framed ImGuiTreeNodeFlags_NoAutoOpenOnLog)))
+
+(defanonenum 
+	(ImGuiSelectableFlags_DontClosePopups #.(cl:ash 1 0))
+	(ImGuiSelectableFlags_SpanAllColumns #.(cl:ash 1 1))
+	(ImGuiSelectableFlags_AllowDoubleClick #.(cl:ash 1 2)))
+
+(cffi:defcenum ImGuiComboFlags_
+	(ImGuiComboFlags_PopupAlignLeft #.(cl:ash 1 0))
+	(ImGuiComboFlags_HeightSmall #.(cl:ash 1 1))
+	(ImGuiComboFlags_HeightRegular #.(cl:ash 1 2))
+	(ImGuiComboFlags_HeightLarge #.(cl:ash 1 3))
+	(ImGuiComboFlags_HeightLargest #.(cl:ash 1 4))
+	(ImGuiComboFlags_HeightMask_ #.(cl:logior (cl:ash 1 1) (cl:ash 1 2) (cl:ash 1 3) (cl:ash 1 4))))
+
+(cffi:defcenum ImGuiFocusedFlags_
+	(ImGuiFocusedFlags_ChildWindows #.(cl:ash 1 0))
+	(ImGuiFocusedFlags_RootWindow #.(cl:ash 1 1))
+	(ImGuiFocusedFlags_RootAndChildWindows #.(cl:logior (cl:ash 1 1) (cl:ash 1 0))))
+
+(cffi:defcenum ImGuiHoveredFlags_
+	(ImGuiHoveredFlags_ChildWindows #.(cl:ash 1 0))
+	(ImGuiHoveredFlags_RootWindow #.(cl:ash 1 1))
+	(ImGuiHoveredFlags_AllowWhenBlockedByPopup #.(cl:ash 1 2))
+	(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem #.(cl:ash 1 4))
+	(ImGuiHoveredFlags_AllowWhenOverlapped #.(cl:ash 1 5))
+	(ImGuiHoveredFlags_RectOnly #.(cl:logior (cl:ash 1 2) (cl:ash 1 4) (cl:ash 1 5)))
+	(ImGuiHoveredFlags_RootAndChildWindows #.(cl:logior (cl:ash 1 1) (cl:ash 1 0))))
+
+(cffi:defcenum ImGuiDragDropFlags_
+	(ImGuiDragDropFlags_SourceNoPreviewTooltip #.(cl:ash 1 0))
+	(ImGuiDragDropFlags_SourceNoDisableHover #.(cl:ash 1 1))
+	(ImGuiDragDropFlags_SourceNoHoldToOpenOthers #.(cl:ash 1 2))
+	(ImGuiDragDropFlags_SourceAllowNullID #.(cl:ash 1 3))
+	(ImGuiDragDropFlags_SourceExtern #.(cl:ash 1 4))
+	(ImGuiDragDropFlags_AcceptBeforeDelivery #.(cl:ash 1 10))
+	(ImGuiDragDropFlags_AcceptNoDrawDefaultRect #.(cl:ash 1 11))
+	(ImGuiDragDropFlags_AcceptPeekOnly #.(cl:logior (cl:ash 1 10) (cl:ash 1 11))))
+
+(defanonenum 
+	ImGuiKey_Tab
+	ImGuiKey_LeftArrow
+	ImGuiKey_RightArrow
+	ImGuiKey_UpArrow
+	ImGuiKey_DownArrow
+	ImGuiKey_PageUp
+	ImGuiKey_PageDown
+	ImGuiKey_Home
+	ImGuiKey_End
+	ImGuiKey_Delete
+	ImGuiKey_Backspace
+	ImGuiKey_Enter
+	ImGuiKey_Escape
+	ImGuiKey_A
+	ImGuiKey_C
+	ImGuiKey_V
+	ImGuiKey_X
+	ImGuiKey_Y
+	ImGuiKey_Z
+	ImGuiKey_COUNT)
+
+(defanonenum 
+	ImGuiCol_Text
+	ImGuiCol_TextDisabled
+	ImGuiCol_WindowBg
+	ImGuiCol_ChildBg
+	ImGuiCol_PopupBg
+	ImGuiCol_Border
+	ImGuiCol_BorderShadow
+	ImGuiCol_FrameBg
+	ImGuiCol_FrameBgHovered
+	ImGuiCol_FrameBgActive
+	ImGuiCol_TitleBg
+	ImGuiCol_TitleBgActive
+	ImGuiCol_TitleBgCollapsed
+	ImGuiCol_MenuBarBg
+	ImGuiCol_ScrollbarBg
+	ImGuiCol_ScrollbarGrab
+	ImGuiCol_ScrollbarGrabHovered
+	ImGuiCol_ScrollbarGrabActive
+	ImGuiCol_CheckMark
+	ImGuiCol_SliderGrab
+	ImGuiCol_SliderGrabActive
+	ImGuiCol_Button
+	ImGuiCol_ButtonHovered
+	ImGuiCol_ButtonActive
+	ImGuiCol_Header
+	ImGuiCol_HeaderHovered
+	ImGuiCol_HeaderActive
+	ImGuiCol_Separator
+	ImGuiCol_SeparatorHovered
+	ImGuiCol_SeparatorActive
+	ImGuiCol_ResizeGrip
+	ImGuiCol_ResizeGripHovered
+	ImGuiCol_ResizeGripActive
+	ImGuiCol_CloseButton
+	ImGuiCol_CloseButtonHovered
+	ImGuiCol_CloseButtonActive
+	ImGuiCol_PlotLines
+	ImGuiCol_PlotLinesHovered
+	ImGuiCol_PlotHistogram
+	ImGuiCol_PlotHistogramHovered
+	ImGuiCol_TextSelectedBg
+	ImGuiCol_ModalWindowDarkening
+	ImGuiCol_DragDropTarget
+	ImGuiCol_COUNT)
+
+(defanonenum 
+	ImGuiStyleVar_Alpha
+	ImGuiStyleVar_WindowPadding
+	ImGuiStyleVar_WindowRounding
+	ImGuiStyleVar_WindowBorderSize
+	ImGuiStyleVar_WindowMinSize
+	ImGuiStyleVar_ChildRounding
+	ImGuiStyleVar_ChildBorderSize
+	ImGuiStyleVar_PopupRounding
+	ImGuiStyleVar_PopupBorderSize
+	ImGuiStyleVar_FramePadding
+	ImGuiStyleVar_FrameRounding
+	ImGuiStyleVar_FrameBorderSize
+	ImGuiStyleVar_ItemSpacing
+	ImGuiStyleVar_ItemInnerSpacing
+	ImGuiStyleVar_IndentSpacing
+	ImGuiStyleVar_GrabMinSize
+	ImGuiStyleVar_ButtonTextAlign
+	ImGuiStyleVar_Count_)
+
+(defanonenum 
+	(ImGuiColorEditFlags_NoAlpha #.(cl:ash 1 1))
+	(ImGuiColorEditFlags_NoPicker #.(cl:ash 1 2))
+	(ImGuiColorEditFlags_NoOptions #.(cl:ash 1 3))
+	(ImGuiColorEditFlags_NoSmallPreview #.(cl:ash 1 4))
+	(ImGuiColorEditFlags_NoInputs #.(cl:ash 1 5))
+	(ImGuiColorEditFlags_NoTooltip #.(cl:ash 1 6))
+	(ImGuiColorEditFlags_NoLabel #.(cl:ash 1 7))
+	(ImGuiColorEditFlags_NoSidePreview #.(cl:ash 1 8))
+	(ImGuiColorEditFlags_AlphaBar #.(cl:ash 1 9))
+	(ImGuiColorEditFlags_AlphaPreview #.(cl:ash 1 10))
+	(ImGuiColorEditFlags_AlphaPreviewHalf #.(cl:ash 1 11))
+	(ImGuiColorEditFlags_HDR #.(cl:ash 1 12))
+	(ImGuiColorEditFlags_RGB #.(cl:ash 1 13))
+	(ImGuiColorEditFlags_HSV #.(cl:ash 1 14))
+	(ImGuiColorEditFlags_HEX #.(cl:ash 1 15))
+	(ImGuiColorEditFlags_Uint8 #.(cl:ash 1 16))
+	(ImGuiColorEditFlags_Float #.(cl:ash 1 17))
+	(ImGuiColorEditFlags_PickerHueBar #.(cl:ash 1 18))
+	(ImGuiColorEditFlags_PickerHueWheel #.(cl:ash 1 19)))
+
+(defanonenum 
+	(ImGuiMouseCursor_None #.-1)
+	(ImGuiMouseCursor_Arrow #.0)
+	ImGuiMouseCursor_TextInput
+	ImGuiMouseCursor_Move
+	ImGuiMouseCursor_ResizeNS
+	ImGuiMouseCursor_ResizeEW
+	ImGuiMouseCursor_ResizeNESW
+	ImGuiMouseCursor_ResizeNWSE
+	ImGuiMouseCursor_Count_)
+
+(defanonenum 
+	(ImGuiCond_Always #.(cl:ash 1 0))
+	(ImGuiCond_Once #.(cl:ash 1 1))
+	(ImGuiCond_FirstUseEver #.(cl:ash 1 2))
+	(ImGuiCond_Appearing #.(cl:ash 1 3)))
+
+(cffi:defcenum ImDrawCornerFlags_
+	(ImDrawCornerFlags_TopLeft #.(cl:ash 1 0))
+	(ImDrawCornerFlags_TopRight #.(cl:ash 1 1))
+	(ImDrawCornerFlags_BotLeft #.(cl:ash 1 2))
+	(ImDrawCornerFlags_BotRight #.(cl:ash 1 3))
+	(ImDrawCornerFlags_Top #.(cl:logior (cl:ash 1 0) (cl:ash 1 1)))
+	(ImDrawCornerFlags_Bot #.(cl:logior (cl:ash 1 2) (cl:ash 1 3)))
+	(ImDrawCornerFlags_Left #.(cl:logior (cl:ash 1 0) (cl:ash 1 2)))
+	(ImDrawCornerFlags_Right #.(cl:logior (cl:ash 1 1) (cl:ash 1 3)))
+	(ImDrawCornerFlags_All #.#xF))
+
+(cffi:defcenum ImDrawListFlags_
+	(ImDrawListFlags_AntiAliasedLines #.(cl:ash 1 0))
+	(ImDrawListFlags_AntiAliasedFill #.(cl:ash 1 1)))
+
+(cffi:defcstruct ImGuiStyle
+	(Alpha :float)
+	(WindowPadding (:struct ImVec2))
+	(WindowRounding :float)
+	(WindowBorderSize :float)
+	(WindowMinSize (:struct ImVec2))
+	(WindowTitleAlign (:struct ImVec2))
+	(ChildRounding :float)
+	(ChildBorderSize :float)
+	(PopupRounding :float)
+	(PopupBorderSize :float)
+	(FramePadding (:struct ImVec2))
+	(FrameRounding :float)
+	(FrameBorderSize :float)
+	(ItemSpacing (:struct ImVec2))
+	(ItemInnerSpacing (:struct ImVec2))
+	(TouchExtraPadding (:struct ImVec2))
+	(IndentSpacing :float)
+	(ColumnsMinSpacing :float)
+	(ScrollbarSize :float)
+	(ScrollbarRounding :float)
+	(GrabMinSize :float)
+	(GrabRounding :float)
+	(ButtonTextAlign (:struct ImVec2))
+	(DisplayWindowPadding (:struct ImVec2))
+	(DisplaySafeAreaPadding (:struct ImVec2))
+	(AntiAliasedLines :pointer)
+	(AntiAliasedFill :pointer)
+	(CurveTessellationTol :float)
+	(Colors :pointer :count #.ImGuiCol_COUNT))
+
+(cffi:defcstruct ImGuiIO
+	(DisplaySize (:struct ImVec2))
+	(DeltaTime :float)
+	(IniSavingRate :float)
+	(IniFilename :string)
+	(LogFilename :string)
+	(MouseDoubleClickTime :float)
+	(MouseDoubleClickMaxDist :float)
+	(MouseDragThreshold :float)
+	(KeyMap :pointer :count #.ImGuiKey_COUNT)
+	(KeyRepeatDelay :float)
+	(KeyRepeatRate :float)
+	(UserData :pointer)
+	(Fonts :pointer)
+	(FontGlobalScale :float)
+	(FontAllowUserScaling :pointer)
+	(FontDefault :pointer)
+	(DisplayFramebufferScale (:struct ImVec2))
+	(DisplayVisibleMin (:struct ImVec2))
+	(DisplayVisibleMax (:struct ImVec2))
+	(OptMacOSXBehaviors :pointer)
+	(OptCursorBlink :pointer)
+	(RenderDrawListsFn :pointer)
+	(GetClipboardTextFn :pointer)
+	(SetClipboardTextFn :pointer)
+	(ClipboardUserData :pointer)
+	(MemAllocFn :pointer)
+	(MemFreeFn :pointer)
+	(ImeSetInputScreenPosFn :pointer)
+	(ImeWindowHandle :pointer)
+	(MousePos (:struct ImVec2))
+	(MouseDown :pointer :count 5)
+	(MouseWheel :float)
+	(MouseDrawCursor :pointer)
+	(KeyCtrl :pointer)
+	(KeyShift :pointer)
+	(KeyAlt :pointer)
+	(KeySuper :pointer)
+	(KeysDown :pointer :count 512)
+	(InputCharacters :pointer :count #.(cl:1+ 16))
+	(WantCaptureMouse :pointer)
+	(WantCaptureKeyboard :pointer)
+	(WantTextInput :pointer)
+	(Framerate :float)
+	(MetricsAllocs :int)
+	(MetricsRenderVertices :int)
+	(MetricsRenderIndices :int)
+	(MetricsActiveWindows :int)
+	(MouseDelta (:struct ImVec2))
+	(MousePosPrev (:struct ImVec2))
+	(MouseClicked :pointer :count 5)
+	(MouseClickedPos :pointer :count 5)
+	(MouseClickedTime :pointer :count 5)
+	(MouseDoubleClicked :pointer :count 5)
+	(MouseReleased :pointer :count 5)
+	(MouseDownOwned :pointer :count 5)
+	(MouseDownDuration :pointer :count 5)
+	(MouseDownDurationPrev :pointer :count 5)
+	(MouseDragMaxDistanceAbs :pointer :count 5)
+	(MouseDragMaxDistanceSqr :pointer :count 5)
+	(KeysDownDuration :pointer :count 512)
+	(KeysDownDurationPrev :pointer :count 512))
+
+(cffi:defcstruct ImGuiTextEditCallbackData
+	(EventFlag :int)
+	(Flags :int)
+	(UserData :pointer)
+	(ReadOnly :pointer)
+	(EventChar :unsigned-short)
+	(EventKey :int)
+	(Buf :string)
+	(BufTextLen :int)
+	(BufSize :int)
+	(BufDirty :pointer)
+	(CursorPos :int)
+	(SelectionStart :int)
+	(SelectionEnd :int))
+
+(cffi:defcstruct ImGuiSizeConstraintCallbackData
+	(UserData :pointer)
+	(Pos (:struct ImVec2))
+	(CurrentSize (:struct ImVec2))
+	(DesiredSize (:struct ImVec2)))
+
+(cffi:defcstruct ImDrawCmd
+	(ElemCount :unsigned-int)
+	(ClipRect (:struct ImVec4))
+	(TextureId :pointer)
+	(UserCallback :pointer)
+	(UserCallbackData :pointer))
+
+(cffi:defcstruct ImDrawData
+	(Valid :pointer)
+	(CmdLists :pointer)
+	(CmdListsCount :int)
+	(TotalVtxCount :int)
+	(TotalIdxCount :int))
+
+(cffi:defcstruct ImDrawVert
+	(pos (:struct ImVec2))
+	(uv (:struct ImVec2))
+	(col :unsigned-int))
+
+(cffi:defcstruct ImFontConfig
+	(FontData :pointer)
+	(FontDataSize :int)
+	(FontDataOwnedByAtlas :pointer)
+	(FontNo :int)
+	(SizePixels :float)
+	(OversampleH :int)
+	(OversampleV :int)
+	(PixelSnapH :pointer)
+	(GlyphExtraSpacing (:struct ImVec2))
+	(GlyphOffset (:struct ImVec2))
+	(GlyphRanges :pointer)
+	(MergeMode :pointer)
+	(RasterizerFlags :unsigned-int)
+	(RasterizerMultiply :float)
+	(Name :pointer :count 32)
+	(DstFont :pointer))
+
+(cffi:defcstruct ImGuiListClipper
+	(StartPosY :float)
+	(ItemsHeight :float)
+	(ItemsCount :int)
+	(StepNo :int)
+	(DisplayStart :int)
+	(DisplayEnd :int))
+
+(cffi:defcstruct ImGuiPayload
+	(Data :pointer)
+	(DataSize :int)
+	(SourceId :unsigned-int)
+	(SourceParentId :unsigned-int)
+	(DataFrameCount :int)
+	(DataType :pointer :count #.(cl:1+ 8))
+	(Preview :pointer)
+	(Delivery :pointer))
 
 (cffi:defcstruct ImVec2_Simple
 	(x :float)
@@ -15,7 +429,7 @@
 	(w :float))
 
 (cffi:defcstruct ImColor_Simple
-	(Value ImVec4_Simple))
+	(Value (:struct ImVec4_Simple)))
 
 (cffi:defcfun ("ImVec2_ImVec2" ImVec2_ImVec2) :pointer)
 
@@ -128,23 +542,17 @@
 
 (cffi:defcfun ("igGetWindowDrawList" igGetWindowDrawList) :pointer)
 
-(cffi:defcfun ("igGetWindowPos" igGetWindowPos) :pointer)
 
-(cffi:defcfun ("igGetWindowSize" igGetWindowSize) :pointer)
 
 (cffi:defcfun ("igGetWindowWidth" igGetWindowWidth) :float)
 
 (cffi:defcfun ("igGetWindowHeight" igGetWindowHeight) :float)
 
-(cffi:defcfun ("igGetContentRegionMax" igGetContentRegionMax) :pointer)
 
-(cffi:defcfun ("igGetContentRegionAvail" igGetContentRegionAvail) :pointer)
 
 (cffi:defcfun ("igGetContentRegionAvailWidth" igGetContentRegionAvailWidth) :float)
 
-(cffi:defcfun ("igGetWindowContentRegionMin" igGetWindowContentRegionMin) :pointer)
 
-(cffi:defcfun ("igGetWindowContentRegionMax" igGetWindowContentRegionMax) :pointer)
 
 (cffi:defcfun ("igGetWindowContentRegionWidth" igGetWindowContentRegionWidth) :float)
 
@@ -231,7 +639,6 @@
 
 (cffi:defcfun ("igGetFontSize" igGetFontSize) :float)
 
-(cffi:defcfun ("igGetFontTexUvWhitePixel" igGetFontTexUvWhitePixel) :pointer)
 
 (cffi:defcfun ("igGetColorU32" igGetColorU32) :pointer
   (idx :pointer)
@@ -288,13 +695,11 @@
 
 (cffi:defcfun ("igEndGroup" igEndGroup) :void)
 
-(cffi:defcfun ("igGetCursorPos" igGetCursorPos) :pointer)
+
 
 (cffi:defcfun ("igGetCursorPosX" igGetCursorPosX) :float)
 
 (cffi:defcfun ("igGetCursorPosY" igGetCursorPosY) :float)
-
-
 
 (cffi:defcfun ("igSetCursorPosX" igSetCursorPosX) :void
   (local_x :float))
@@ -302,9 +707,9 @@
 (cffi:defcfun ("igSetCursorPosY" igSetCursorPosY) :void
   (local_y :float))
 
-(cffi:defcfun ("igGetCursorStartPos" igGetCursorStartPos) :pointer)
 
-(cffi:defcfun ("igGetCursorScreenPos" igGetCursorScreenPos) :pointer)
+
+
 
 
 
@@ -655,23 +1060,6 @@
   (format :string)
   (power :float))
 
-(cffi:defcfun ("igVSliderFloat" igVSliderFloat) :pointer
-  (label :string)
-  (size :pointer)
-  (v :pointer)
-  (v_min :float)
-  (v_max :float)
-  (format :string)
-  (power :float))
-
-(cffi:defcfun ("igVSliderInt" igVSliderInt) :pointer
-  (label :string)
-  (size :pointer)
-  (v :pointer)
-  (v_min :int)
-  (v_max :int)
-  (format :string))
-
 (cffi:defcfun ("igVSliderScalar" igVSliderScalar) :pointer
   (label :string)
   (size :pointer)
@@ -686,15 +1074,6 @@
   (label :string)
   (buf :string)
   (buf_size :pointer)
-  (flags :pointer)
-  (callback :pointer)
-  (user_data :pointer))
-
-(cffi:defcfun ("igInputTextMultiline" igInputTextMultiline) :pointer
-  (label :string)
-  (buf :string)
-  (buf_size :pointer)
-  (size :pointer)
   (flags :pointer)
   (callback :pointer)
   (user_data :pointer))
@@ -795,11 +1174,7 @@
   (flags :pointer)
   (ref_col :pointer))
 
-(cffi:defcfun ("igColorButton" igColorButton) :pointer
-  (desc_id :string)
-  (col :pointer)
-  (flags :pointer)
-  (size :pointer))
+
 
 (cffi:defcfun ("igSetColorEditOptions" igSetColorEditOptions) :void
   (flags :pointer))
@@ -880,17 +1255,9 @@
   (p_open :pointer)
   (flags :pointer))
 
-(cffi:defcfun ("igSelectable" igSelectable) :pointer
-  (label :string)
-  (selected :pointer)
-  (flags :pointer)
-  (size :pointer))
 
-(cffi:defcfun ("igSelectableBoolPtr" igSelectableBoolPtr) :pointer
-  (label :string)
-  (p_selected :pointer)
-  (flags :pointer)
-  (size :pointer))
+
+
 
 (cffi:defcfun ("igListBoxStr_arr" igListBoxStr_arr) :pointer
   (label :string)
@@ -907,9 +1274,7 @@
   (items_count :int)
   (height_in_items :int))
 
-(cffi:defcfun ("igListBoxHeaderVec2" igListBoxHeaderVec2) :pointer
-  (label :string)
-  (size :pointer))
+
 
 (cffi:defcfun ("igListBoxHeaderInt" igListBoxHeaderInt) :pointer
   (label :string)
@@ -1087,10 +1452,7 @@
 
 (cffi:defcfun ("igGetDragDropPayload" igGetDragDropPayload) :pointer)
 
-(cffi:defcfun ("igPushClipRect" igPushClipRect) :void
-  (clip_rect_min :pointer)
-  (clip_rect_max :pointer)
-  (intersect_with_current_clip_rect :pointer))
+
 
 (cffi:defcfun ("igPopClipRect" igPopClipRect) :void)
 
@@ -1125,16 +1487,10 @@
 
 (cffi:defcfun ("igIsAnyItemFocused" igIsAnyItemFocused) :pointer)
 
-(cffi:defcfun ("igGetItemRectMin" igGetItemRectMin) :pointer)
-
-(cffi:defcfun ("igGetItemRectMax" igGetItemRectMax) :pointer)
-
-(cffi:defcfun ("igGetItemRectSize" igGetItemRectSize) :pointer)
 
 (cffi:defcfun ("igSetItemAllowOverlap" igSetItemAllowOverlap) :void)
 
-(cffi:defcfun ("igIsRectVisible" igIsRectVisible) :pointer
-  (size :pointer))
+
 
 (cffi:defcfun ("igIsRectVisibleVec2" igIsRectVisibleVec2) :pointer
   (rect_min :pointer)
@@ -1156,11 +1512,7 @@
 
 (cffi:defcfun ("igGetStateStorage" igGetStateStorage) :pointer)
 
-(cffi:defcfun ("igCalcTextSize" igCalcTextSize) :pointer
-  (text :string)
-  (text_end :string)
-  (hide_text_after_double_hash :pointer)
-  (wrap_width :float))
+
 
 (cffi:defcfun ("igCalcListClipping" igCalcListClipping) :void
   (items_count :int)
@@ -1168,18 +1520,13 @@
   (out_items_display_start :pointer)
   (out_items_display_end :pointer))
 
-(cffi:defcfun ("igBeginChildFrame" igBeginChildFrame) :pointer
-  (id :pointer)
-  (size :pointer)
-  (flags :pointer))
+
 
 (cffi:defcfun ("igEndChildFrame" igEndChildFrame) :void)
 
-(cffi:defcfun ("igColorConvertU32ToFloat4" igColorConvertU32ToFloat4) :pointer
-  (in :pointer))
 
-(cffi:defcfun ("igColorConvertFloat4ToU32" igColorConvertFloat4ToU32) :pointer
-  (in :pointer))
+
+
 
 (cffi:defcfun ("igGetKeyIndex" igGetKeyIndex) :int
   (imgui_key :pointer))
@@ -1218,21 +1565,13 @@
   (button :int)
   (lock_threshold :float))
 
-(cffi:defcfun ("igIsMouseHoveringRect" igIsMouseHoveringRect) :pointer
-  (r_min :pointer)
-  (r_max :pointer)
-  (clip :pointer))
+
 
 (cffi:defcfun ("igIsMousePosValid" igIsMousePosValid) :pointer
   (mouse_pos :pointer))
 
-(cffi:defcfun ("igGetMousePos" igGetMousePos) :pointer)
 
-(cffi:defcfun ("igGetMousePosOnOpeningCurrentPopup" igGetMousePosOnOpeningCurrentPopup) :pointer)
 
-(cffi:defcfun ("igGetMouseDragDelta" igGetMouseDragDelta) :pointer
-  (button :int)
-  (lock_threshold :float))
 
 (cffi:defcfun ("igResetMouseDragDelta" igResetMouseDragDelta) :void
   (button :int))
@@ -1561,12 +1900,7 @@
   (v :float)
   (a :float))
 
-(cffi:defcfun ("ImColor_HSV" ImColor_HSV) :pointer
-  (self :pointer)
-  (h :float)
-  (s :float)
-  (v :float)
-  (a :float))
+
 
 (cffi:defcfun ("ImDrawCmd_ImDrawCmd" ImDrawCmd_ImDrawCmd) :pointer)
 
@@ -1579,11 +1913,7 @@
 (cffi:defcfun ("ImDrawList_destroy" ImDrawList_destroy) :void
   (self :pointer))
 
-(cffi:defcfun ("ImDrawList_PushClipRect" ImDrawList_PushClipRect) :void
-  (self :pointer)
-  (clip_rect_min :pointer)
-  (clip_rect_max :pointer)
-  (intersect_with_current_clip_rect :pointer))
+
 
 (cffi:defcfun ("ImDrawList_PushClipRectFullScreen" ImDrawList_PushClipRectFullScreen) :void
   (self :pointer))
@@ -1598,150 +1928,9 @@
 (cffi:defcfun ("ImDrawList_PopTextureID" ImDrawList_PopTextureID) :void
   (self :pointer))
 
-(cffi:defcfun ("ImDrawList_GetClipRectMin" ImDrawList_GetClipRectMin) :pointer
-  (self :pointer))
 
-(cffi:defcfun ("ImDrawList_GetClipRectMax" ImDrawList_GetClipRectMax) :pointer
-  (self :pointer))
 
-(cffi:defcfun ("ImDrawList_AddLine" ImDrawList_AddLine) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (col :pointer)
-  (thickness :float))
 
-(cffi:defcfun ("ImDrawList_AddRect" ImDrawList_AddRect) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (col :pointer)
-  (rounding :float)
-  (rounding_corners_flags :int)
-  (thickness :float))
-
-(cffi:defcfun ("ImDrawList_AddRectFilled" ImDrawList_AddRectFilled) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (col :pointer)
-  (rounding :float)
-  (rounding_corners_flags :int))
-
-(cffi:defcfun ("ImDrawList_AddRectFilledMultiColor" ImDrawList_AddRectFilledMultiColor) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (col_upr_left :pointer)
-  (col_upr_right :pointer)
-  (col_bot_right :pointer)
-  (col_bot_left :pointer))
-
-(cffi:defcfun ("ImDrawList_AddQuad" ImDrawList_AddQuad) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (c :pointer)
-  (d :pointer)
-  (col :pointer)
-  (thickness :float))
-
-(cffi:defcfun ("ImDrawList_AddQuadFilled" ImDrawList_AddQuadFilled) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (c :pointer)
-  (d :pointer)
-  (col :pointer))
-
-(cffi:defcfun ("ImDrawList_AddTriangle" ImDrawList_AddTriangle) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (c :pointer)
-  (col :pointer)
-  (thickness :float))
-
-(cffi:defcfun ("ImDrawList_AddTriangleFilled" ImDrawList_AddTriangleFilled) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (c :pointer)
-  (col :pointer))
-
-(cffi:defcfun ("ImDrawList_AddCircle" ImDrawList_AddCircle) :void
-  (self :pointer)
-  (centre :pointer)
-  (radius :float)
-  (col :pointer)
-  (num_segments :int)
-  (thickness :float))
-
-(cffi:defcfun ("ImDrawList_AddCircleFilled" ImDrawList_AddCircleFilled) :void
-  (self :pointer)
-  (centre :pointer)
-  (radius :float)
-  (col :pointer)
-  (num_segments :int))
-
-(cffi:defcfun ("ImDrawList_AddText" ImDrawList_AddText) :void
-  (self :pointer)
-  (pos :pointer)
-  (col :pointer)
-  (text_begin :string)
-  (text_end :string))
-
-(cffi:defcfun ("ImDrawList_AddTextFontPtr" ImDrawList_AddTextFontPtr) :void
-  (self :pointer)
-  (font :pointer)
-  (font_size :float)
-  (pos :pointer)
-  (col :pointer)
-  (text_begin :string)
-  (text_end :string)
-  (wrap_width :float)
-  (cpu_fine_clip_rect :pointer))
-
-(cffi:defcfun ("ImDrawList_AddImage" ImDrawList_AddImage) :void
-  (self :pointer)
-  (user_texture_id :pointer)
-  (a :pointer)
-  (b :pointer)
-  (uv_a :pointer)
-  (uv_b :pointer)
-  (col :pointer))
-
-(cffi:defcfun ("ImDrawList_AddImageQuad" ImDrawList_AddImageQuad) :void
-  (self :pointer)
-  (user_texture_id :pointer)
-  (a :pointer)
-  (b :pointer)
-  (c :pointer)
-  (d :pointer)
-  (uv_a :pointer)
-  (uv_b :pointer)
-  (uv_c :pointer)
-  (uv_d :pointer)
-  (col :pointer))
-
-(cffi:defcfun ("ImDrawList_AddImageRounded" ImDrawList_AddImageRounded) :void
-  (self :pointer)
-  (user_texture_id :pointer)
-  (a :pointer)
-  (b :pointer)
-  (uv_a :pointer)
-  (uv_b :pointer)
-  (col :pointer)
-  (rounding :float)
-  (rounding_corners :int))
-
-(cffi:defcfun ("ImDrawList_AddPolyline" ImDrawList_AddPolyline) :void
-  (self :pointer)
-  (points :pointer)
-  (num_points :int)
-  (col :pointer)
-  (closed :pointer)
-  (thickness :float))
 
 (cffi:defcfun ("ImDrawList_AddConvexPolyFilled" ImDrawList_AddConvexPolyFilled) :void
   (self :pointer)
@@ -1762,13 +1951,7 @@
 (cffi:defcfun ("ImDrawList_PathClear" ImDrawList_PathClear) :void
   (self :pointer))
 
-(cffi:defcfun ("ImDrawList_PathLineTo" ImDrawList_PathLineTo) :void
-  (self :pointer)
-  (pos :pointer))
 
-(cffi:defcfun ("ImDrawList_PathLineToMergeDuplicate" ImDrawList_PathLineToMergeDuplicate) :void
-  (self :pointer)
-  (pos :pointer))
 
 (cffi:defcfun ("ImDrawList_PathFillConvex" ImDrawList_PathFillConvex) :void
   (self :pointer)
@@ -1780,34 +1963,9 @@
   (closed :pointer)
   (thickness :float))
 
-(cffi:defcfun ("ImDrawList_PathArcTo" ImDrawList_PathArcTo) :void
-  (self :pointer)
-  (centre :pointer)
-  (radius :float)
-  (a_min :float)
-  (a_max :float)
-  (num_segments :int))
 
-(cffi:defcfun ("ImDrawList_PathArcToFast" ImDrawList_PathArcToFast) :void
-  (self :pointer)
-  (centre :pointer)
-  (radius :float)
-  (a_min_of_12 :int)
-  (a_max_of_12 :int))
 
-(cffi:defcfun ("ImDrawList_PathBezierCurveTo" ImDrawList_PathBezierCurveTo) :void
-  (self :pointer)
-  (p1 :pointer)
-  (p2 :pointer)
-  (p3 :pointer)
-  (num_segments :int))
 
-(cffi:defcfun ("ImDrawList_PathRect" ImDrawList_PathRect) :void
-  (self :pointer)
-  (rect_min :pointer)
-  (rect_max :pointer)
-  (rounding :float)
-  (rounding_corners_flags :int))
 
 (cffi:defcfun ("ImDrawList_ChannelsSplit" ImDrawList_ChannelsSplit) :void
   (self :pointer)
@@ -1842,47 +2000,15 @@
   (idx_count :int)
   (vtx_count :int))
 
-(cffi:defcfun ("ImDrawList_PrimRect" ImDrawList_PrimRect) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (col :pointer))
 
-(cffi:defcfun ("ImDrawList_PrimRectUV" ImDrawList_PrimRectUV) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (uv_a :pointer)
-  (uv_b :pointer)
-  (col :pointer))
 
-(cffi:defcfun ("ImDrawList_PrimQuadUV" ImDrawList_PrimQuadUV) :void
-  (self :pointer)
-  (a :pointer)
-  (b :pointer)
-  (c :pointer)
-  (d :pointer)
-  (uv_a :pointer)
-  (uv_b :pointer)
-  (uv_c :pointer)
-  (uv_d :pointer)
-  (col :pointer))
 
-(cffi:defcfun ("ImDrawList_PrimWriteVtx" ImDrawList_PrimWriteVtx) :void
-  (self :pointer)
-  (pos :pointer)
-  (uv :pointer)
-  (col :pointer))
 
 (cffi:defcfun ("ImDrawList_PrimWriteIdx" ImDrawList_PrimWriteIdx) :void
   (self :pointer)
   (idx :pointer))
 
-(cffi:defcfun ("ImDrawList_PrimVtx" ImDrawList_PrimVtx) :void
-  (self :pointer)
-  (pos :pointer)
-  (uv :pointer)
-  (col :pointer))
+
 
 (cffi:defcfun ("ImDrawList_UpdateClipRect" ImDrawList_UpdateClipRect) :void
   (self :pointer))
@@ -1901,9 +2027,7 @@
 (cffi:defcfun ("ImDrawData_DeIndexAllBuffers" ImDrawData_DeIndexAllBuffers) :void
   (self :pointer))
 
-(cffi:defcfun ("ImDrawData_ScaleClipRects" ImDrawData_ScaleClipRects) :void
-  (self :pointer)
-  (fb_scale :pointer))
+
 
 (cffi:defcfun ("ImFontConfig_ImFontConfig" ImFontConfig_ImFontConfig) :pointer)
 
@@ -2104,14 +2228,7 @@
 (cffi:defcfun ("ImFont_GetDebugName" ImFont_GetDebugName) :string
   (self :pointer))
 
-(cffi:defcfun ("ImFont_CalcTextSizeA" ImFont_CalcTextSizeA) :pointer
-  (self :pointer)
-  (size :float)
-  (max_width :float)
-  (wrap_width :float)
-  (text_begin :string)
-  (text_end :string)
-  (remaining :pointer))
+
 
 (cffi:defcfun ("ImFont_CalcWordWrapPositionA" ImFont_CalcWordWrapPositionA) :string
   (self :pointer)
@@ -4072,80 +4189,80 @@
 (cffi:defcfun ("ImVector_ImWchar_UnInit" ImVector_ImWchar_UnInit) :void
   (p :pointer))
 ;;---
-(cffi:defcfun ("_igBeginChild" _igBeginChild) :int
+(cffi:defcfun ("_igBeginChild" igBeginChild) :int
   (larg1 :string)
   (larg2 :pointer)
   (larg3 :int)
   (larg4 :pointer))
 
-(cffi:defcfun ("_igSetNextWindowPos" _igSetNextWindowPos) :void
+(cffi:defcfun ("_igSetNextWindowPos" igSetNextWindowPos) :void
   (larg1 :pointer)
   (larg2 :pointer)
   (larg3 :pointer))
 
-(cffi:defcfun ("_igSetNextWindowSize" _igSetNextWindowSize) :void
+(cffi:defcfun ("_igSetNextWindowSize" igSetNextWindowSize) :void
   (larg1 :pointer)
   (larg2 :pointer))
 
-(cffi:defcfun ("_igSetNextWindowSizeConstraints" _igSetNextWindowSizeConstraints) :void
+(cffi:defcfun ("_igSetNextWindowSizeConstraints" igSetNextWindowSizeConstraints) :void
   (larg1 :pointer)
   (larg2 :pointer)
   (larg3 :pointer)
   (larg4 :pointer))
 
-(cffi:defcfun ("_igSetNextWindowContentSize" _igSetNextWindowContentSize) :void
+(cffi:defcfun ("_igSetNextWindowContentSize" igSetNextWindowContentSize) :void
   (larg1 :pointer))
 
-(cffi:defcfun ("_igSetWindowPosVec2" _igSetWindowPosVec2) :void
+(cffi:defcfun ("_igSetWindowPosVec2" igSetWindowPosVec2) :void
   (larg1 :pointer)
   (larg2 :pointer))
 
-(cffi:defcfun ("_igSetWindowSizeVec2" _igSetWindowSizeVec2) :void
+(cffi:defcfun ("_igSetWindowSizeVec2" igSetWindowSizeVec2) :void
   (larg1 :pointer)
   (larg2 :pointer))
 
-(cffi:defcfun ("_igSetWindowPosStr" _igSetWindowPosStr) :void
+(cffi:defcfun ("_igSetWindowPosStr" igSetWindowPosStr) :void
   (larg1 :string)
   (larg2 :pointer)
   (larg3 :pointer))
 
-(cffi:defcfun ("_igSetWindowSizeStr" _igSetWindowSizeStr) :void
+(cffi:defcfun ("_igSetWindowSizeStr" igSetWindowSizeStr) :void
   (larg1 :string)
   (larg2 :pointer)
   (larg3 :pointer))
 
-(cffi:defcfun ("_igPushStyleColor" _igPushStyleColor) :void
+(cffi:defcfun ("_igPushStyleColor" igPushStyleColor) :void
   (larg1 :pointer)
   (larg2 :pointer))
 
-(cffi:defcfun ("_igPushStyleVarVec2" _igPushStyleVarVec2) :void
+(cffi:defcfun ("_igPushStyleVarVec2" igPushStyleVarVec2) :void
   (larg1 :pointer)
   (larg2 :pointer))
 
-(cffi:defcfun ("_igSetCursorPos" _igSetCursorPos) :void
+(cffi:defcfun ("_igSetCursorPos" igSetCursorPos) :void
   (larg1 :pointer))
 
-(cffi:defcfun ("_igSetCursorScreenPos" _igSetCursorScreenPos) :void
+(cffi:defcfun ("_igSetCursorScreenPos" igSetCursorScreenPos) :void
   (larg1 :pointer))
 
-(cffi:defcfun ("_igTextColored" _igTextColored) :void
+(cffi:defcfun ("_igTextColored" igTextColored) :void
   (larg1 :pointer)
   (larg2 :string))
 
-(cffi:defcfun ("_igTextColoredV" _igTextColoredV) :void
+(cffi:defcfun ("_igTextColoredV" igTextColoredV) :void
   (larg1 :pointer)
   (larg2 :string)
   (larg3 :pointer))
 
-(cffi:defcfun ("_igButton" _igButton) :int
+(cffi:defcfun ("_igButton" igButton) :int
   (larg1 :string)
   (larg2 :pointer))
 
-(cffi:defcfun ("_igInvisibleButton" _igInvisibleButton) :int
+(cffi:defcfun ("_igInvisibleButton" igInvisibleButton) :int
   (larg1 :string)
   (larg2 :pointer))
 
-(cffi:defcfun ("_igImage" _igImage) :void
+(cffi:defcfun ("_igImage" igImage) :void
   (larg1 :pointer)
   (larg2 :pointer)
   (larg3 :pointer)
@@ -4153,7 +4270,7 @@
   (larg5 :pointer)
   (larg6 :pointer))
 
-(cffi:defcfun ("_igImageButton" _igImageButton) :int
+(cffi:defcfun ("_igImageButton" igImageButton) :int
   (larg1 :pointer)
   (larg2 :pointer)
   (larg3 :pointer)
@@ -4162,7 +4279,7 @@
   (larg6 :pointer)
   (larg7 :pointer))
 
-(cffi:defcfun ("_igPlotLines" _igPlotLines) :void
+(cffi:defcfun ("_igPlotLines" igPlotLines) :void
   (larg1 :string)
   (larg2 :pointer)
   (larg3 :int)
@@ -4173,7 +4290,7 @@
   (larg8 :pointer)
   (larg9 :int))
 
-(cffi:defcfun ("_igPlotLinesFnPtr" _igPlotLinesFnPtr) :void
+(cffi:defcfun ("_igPlotLinesFnPtr" igPlotLinesFnPtr) :void
   (larg1 :string)
   (larg2 :pointer)
   (larg3 :pointer)
@@ -4184,7 +4301,7 @@
   (larg8 :float)
   (larg9 :pointer))
 
-(cffi:defcfun ("_igPlotHistogramFloatPtr" _igPlotHistogramFloatPtr) :void
+(cffi:defcfun ("_igPlotHistogramFloatPtr" igPlotHistogramFloatPtr) :void
   (larg1 :string)
   (larg2 :pointer)
   (larg3 :int)
@@ -4195,7 +4312,7 @@
   (larg8 :pointer)
   (larg9 :int))
 
-(cffi:defcfun ("_igPlotHistogramFnPtr" _igPlotHistogramFnPtr) :void
+(cffi:defcfun ("_igPlotHistogramFnPtr" igPlotHistogramFnPtr) :void
   (larg1 :string)
   (larg2 :pointer)
   (larg3 :pointer)
@@ -4206,348 +4323,406 @@
   (larg8 :float)
   (larg9 :pointer))
 
-(cffi:defcfun ("_igInputTextMultiline" _igInputTextMultiline) :int
-  (larg1 :string)
-  (larg2 :string)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :pointer)
-  (larg7 :pointer))
+(cffi:defcfun ("_igInputTextMultiline" igInputTextMultiline) :int
+  (label :string)
+  (buf :string)
+  (buf_size :pointer)
+  (size :pointer)
+  (flags :pointer)
+  (callback :pointer)
+  (user_data :pointer))
 
-(cffi:defcfun ("_igVSliderFloat" _igVSliderFloat) :int
-  (larg1 :string)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :float)
-  (larg5 :float)
-  (larg6 :string)
-  (larg7 :float))
+(cffi:defcfun ("_igVSliderFloat" igVSliderFloat) :int
+  (label :string)
+  (size :pointer)
+  (v :pointer)
+  (v_min :float)
+  (v_max :float)
+  (format :string)
+  (power :float))
 
-(cffi:defcfun ("_igVSliderInt" _igVSliderInt) :int
-  (larg1 :string)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :int)
-  (larg5 :int)
-  (larg6 :string))
+(cffi:defcfun ("_igVSliderInt" igVSliderInt) :int
+  (label :string)
+  (size :pointer)
+  (v :pointer)
+  (v_min :int)
+  (v_max :int)
+  (format :string))
 
-(cffi:defcfun ("_igColorButton" _igColorButton) :int
-  (larg1 :string)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer))
+(cffi:defcfun ("_igColorButton" igColorButton) :int
+  (desc_id :string)
+  (col :pointer)
+  (flags :pointer)
+  (size :pointer))
 
-(cffi:defcfun ("_igSelectable" _igSelectable) :int
-  (larg1 :string)
-  (larg2 :int)
-  (larg3 :pointer)
-  (larg4 :pointer))
+(cffi:defcfun ("_igSelectable" igSelectable) :int
+  (label :string)
+  (selected :pointer)
+  (flags :pointer)
+  (size :pointer))
 
-(cffi:defcfun ("_igSelectableBoolPtr" _igSelectableBoolPtr) :int
-  (larg1 :string)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer))
+(cffi:defcfun ("_igSelectableBoolPtr" igSelectableBoolPtr) :int
+  (label :string)
+  (p_selected :pointer)
+  (flags :pointer)
+  (size :pointer))
 
-(cffi:defcfun ("_igListBoxHeaderVec2" _igListBoxHeaderVec2) :int
-  (larg1 :string)
-  (larg2 :pointer))
+(cffi:defcfun ("_igListBoxHeaderVec2" igListBoxHeaderVec2) :int
+  (label :string)
+  (size :pointer))
 
-(cffi:defcfun ("_igPushClipRect" _igPushClipRect) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :int))
+(cffi:defcfun ("_igPushClipRect" igPushClipRect) :void
+  (clip_rect_min :pointer)
+  (clip_rect_max :pointer)
+  (intersect_with_current_clip_rect :int))
 
-(cffi:defcfun ("_igIsRectVisible" _igIsRectVisible) :int
-  (larg1 :pointer))
+(cffi:defcfun ("_igIsRectVisible" igIsRectVisible) :int
+  (size :pointer))
 
-(cffi:defcfun ("_igBeginChildFrame" _igBeginChildFrame) :int
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer))
+(cffi:defcfun ("_igBeginChildFrame" igBeginChildFrame) :int
+  (id :pointer)
+  (size :pointer)
+  (flags :pointer))
 
-(cffi:defcfun ("_igColorConvertFloat4ToU32" _igColorConvertFloat4ToU32) :pointer
-  (larg1 :pointer))
+(cffi:defcfun ("_igColorConvertFloat4ToU32" igColorConvertFloat4ToU32) :pointer
+  (in :pointer))
 
-(cffi:defcfun ("_igIsMouseHoveringRect" _igIsMouseHoveringRect) :int
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :int))
+(cffi:defcfun ("_igIsMouseHoveringRect" igIsMouseHoveringRect) :int
+  (r_min :pointer)
+  (r_max :pointer)
+  (clip :int))
 
-(cffi:defcfun ("_ImDrawList_PushClipRect" _ImDrawList_PushClipRect) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :int))
+(cffi:defcfun ("_ImDrawList_PushClipRect" ImDrawList_PushClipRect) :void
+  (self :pointer)
+  (clip_rect_min :pointer)
+  (clip_rect_max :pointer)
+  (intersect_with_current_clip_rect :int))
 
-(cffi:defcfun ("_ImDrawList_AddLine" _ImDrawList_AddLine) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :float))
+(cffi:defcfun ("_ImDrawList_AddLine" ImDrawList_AddLine) :void
+  (self :pointer)
+  (a :pointer)
+  (b :pointer)
+  (col :pointer)
+  (thickness :float))
 
-(cffi:defcfun ("_ImDrawList_AddRect" _ImDrawList_AddRect) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :float)
-  (larg6 :int)
-  (larg7 :float))
+(cffi:defcfun ("_ImDrawList_AddRect" ImDrawList_AddRect) :void
+  (self :pointer)
+  (a :pointer)
+  (b :pointer)
+  (col :pointer)
+  (rounding :float)
+  (rounding_corners_flags :int)
+  (thickness :float))
 
-(cffi:defcfun ("_ImDrawList_AddRectFilled" _ImDrawList_AddRectFilled) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :float)
-  (larg6 :int))
+(cffi:defcfun ("_ImDrawList_AddRectFilled" ImDrawList_AddRectFilled) :void
+  (self :pointer)
+  (a :pointer)
+  (b :pointer)
+  (col :pointer)
+  (rounding :float)
+  (rounding_corners_flags :int))
 
-(cffi:defcfun ("_ImDrawList_AddRectFilledMultiColor" _ImDrawList_AddRectFilledMultiColor) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :pointer)
-  (larg7 :pointer))
+(cffi:defcfun ("_ImDrawList_AddRectFilledMultiColor" ImDrawList_AddRectFilledMultiColor) :void
+  (self :pointer)
+  (a :pointer)
+  (b :pointer)
+  (col_upr_left :pointer)
+  (col_upr_right :pointer)
+  (col_bot_right :pointer)
+  (col_bot_left :pointer))
 
-(cffi:defcfun ("_ImDrawList_AddQuad" _ImDrawList_AddQuad) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :pointer)
-  (larg7 :float))
+(cffi:defcfun ("_ImDrawList_AddQuad" ImDrawList_AddQuad) :void
+  (self :pointer)
+  (a :pointer)
+  (b :pointer)
+  (c :pointer)
+  (d :pointer)
+  (col :pointer)
+  (thickness :float))
 
-(cffi:defcfun ("_ImDrawList_AddQuadFilled" _ImDrawList_AddQuadFilled) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :pointer))
+(cffi:defcfun ("_ImDrawList_AddQuadFilled" ImDrawList_AddQuadFilled) :void
+  (self :pointer)
+  (a :pointer)
+  (b :pointer)
+  (c :pointer)
+  (d :pointer)
+  (col :pointer))
 
-(cffi:defcfun ("_ImDrawList_AddTriangle" _ImDrawList_AddTriangle) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :float))
+(cffi:defcfun ("_ImDrawList_AddTriangle" ImDrawList_AddTriangle) :void
+  (self :pointer)
+  (a :pointer)
+  (b :pointer)
+  (c :pointer)
+  (col :pointer)
+  (thickness :float))
 
-(cffi:defcfun ("_ImDrawList_AddTriangleFilled" _ImDrawList_AddTriangleFilled) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer))
+(cffi:defcfun ("_ImDrawList_AddTriangleFilled" ImDrawList_AddTriangleFilled) :void
+  (self :pointer)
+  (a :pointer)
+  (b :pointer)
+  (c :pointer)
+  (col :pointer))
 
-(cffi:defcfun ("_ImDrawList_AddCircle" _ImDrawList_AddCircle) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :float)
-  (larg4 :pointer)
-  (larg5 :int)
-  (larg6 :float))
+(cffi:defcfun ("_ImDrawList_AddCircle" ImDrawList_AddCircle) :void
+  (self :pointer)
+  (centre :pointer)
+  (radius :float)
+  (col :pointer)
+  (num_segments :int)
+  (thickness :float))
 
-(cffi:defcfun ("_ImDrawList_AddCircleFilled" _ImDrawList_AddCircleFilled) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :float)
-  (larg4 :pointer)
-  (larg5 :int))
+(cffi:defcfun ("_ImDrawList_AddCircleFilled" ImDrawList_AddCircleFilled) :void
+  (self :pointer)
+  (centre :pointer)
+  (radius :float)
+  (col :pointer)
+  (num_segments :int))
 
-(cffi:defcfun ("_ImDrawList_AddText" _ImDrawList_AddText) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :string)
-  (larg5 :string))
 
-(cffi:defcfun ("_ImDrawList_AddTextFontPtr" _ImDrawList_AddTextFontPtr) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :float)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :string)
-  (larg7 :string)
-  (larg8 :float)
-  (larg9 :pointer))
+(cffi:defcfun ("_ImDrawList_AddText" ImDrawList_AddText) :void
+  (self :pointer)
+  (pos :pointer)
+  (col :pointer)
+  (text_begin :string)
+  (text_end :string))
 
-(cffi:defcfun ("_ImDrawList_AddImage" _ImDrawList_AddImage) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :pointer)
-  (larg7 :pointer))
+(cffi:defcfun ("_ImDrawList_AddTextFontPtr" ImDrawList_AddTextFontPtr) :void
+  (self :pointer)
+  (font :pointer)
+  (font_size :float)
+  (pos :pointer)
+  (col :pointer)
+  (text_begin :string)
+  (text_end :string)
+  (wrap_width :float)
+  (cpu_fine_clip_rect :pointer))
 
-(cffi:defcfun ("_ImDrawList_AddImageQuad" _ImDrawList_AddImageQuad) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :pointer)
-  (larg7 :pointer)
-  (larg8 :pointer)
-  (larg9 :pointer)
-  (larg10 :pointer)
-  (larg11 :pointer))
+(cffi:defcfun ("ImDrawList_AddPolyline" ImDrawList_AddPolyline) :void
+  (self :pointer)
+  (points :pointer)
+  (num_points :int)
+  (col :pointer)
+  (closed :pointer)
+  (thickness :float))
 
-(cffi:defcfun ("_ImDrawList_AddImageRounded" _ImDrawList_AddImageRounded) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :pointer)
-  (larg7 :pointer)
-  (larg8 :float)
-  (larg9 :int))
+(cffi:defcfun ("_ImDrawList_AddImage" ImDrawList_AddImage) :void
+  (self :pointer)
+  (user_texture_id :pointer)
+  (a :pointer)
+  (b :pointer)
+  (uv_a :pointer)
+  (uv_b :pointer)
+  (col :pointer))
 
-(cffi:defcfun ("_ImDrawList_PathLineTo" _ImDrawList_PathLineTo) :void
-  (larg1 :pointer)
-  (larg2 :pointer))
+(cffi:defcfun ("_ImDrawList_AddImageQuad" ImDrawList_AddImageQuad) :void
+  (self :pointer)
+  (user_texture_id :pointer)
+  (a :pointer)
+  (b :pointer)
+  (c :pointer)
+  (d :pointer)
+  (uv_a :pointer)
+  (uv_b :pointer)
+  (uv_c :pointer)
+  (uv_d :pointer)
+  (col :pointer))
 
-(cffi:defcfun ("_ImDrawList_PathLineToMergeDuplicate" _ImDrawList_PathLineToMergeDuplicate) :void
-  (larg1 :pointer)
-  (larg2 :pointer))
+(cffi:defcfun ("_ImDrawList_AddImageRounded" ImDrawList_AddImageRounded) :void
+  (self :pointer)
+  (user_texture_id :pointer)
+  (a :pointer)
+  (b :pointer)
+  (uv_a :pointer)
+  (uv_b :pointer)
+  (col :pointer)
+  (rounding :float)
+  (rounding_corners :int))
 
-(cffi:defcfun ("_ImDrawList_PathArcTo" _ImDrawList_PathArcTo) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :float)
-  (larg4 :float)
-  (larg5 :float)
-  (larg6 :int))
+(cffi:defcfun ("_ImDrawList_PathLineTo" ImDrawList_PathLineTo) :void
+  (self :pointer)
+  (pos :pointer))
 
-(cffi:defcfun ("_ImDrawList_PathArcToFast" _ImDrawList_PathArcToFast) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :float)
-  (larg4 :int)
-  (larg5 :int))
+(cffi:defcfun ("_ImDrawList_PathLineToMergeDuplicate" ImDrawList_PathLineToMergeDuplicate) :void
+  (self :pointer)
+  (pos :pointer))
 
-(cffi:defcfun ("_ImDrawList_PathBezierCurveTo" _ImDrawList_PathBezierCurveTo) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :int))
+(cffi:defcfun ("_ImDrawList_PathArcTo" ImDrawList_PathArcTo) :void
+  (self :pointer)
+  (centre :pointer)
+  (radius :float)
+  (a_min :float)
+  (a_max :float)
+  (num_segments :int))
 
-(cffi:defcfun ("_ImDrawList_PathRect" _ImDrawList_PathRect) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :float)
-  (larg5 :int))
+(cffi:defcfun ("_ImDrawList_PathArcToFast" ImDrawList_PathArcToFast) :void
+  (self :pointer)
+  (centre :pointer)
+  (radius :float)
+  (a_min_of_12 :int)
+  (a_max_of_12 :int))
 
-(cffi:defcfun ("_ImDrawList_PrimRect" _ImDrawList_PrimRect) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer))
+(cffi:defcfun ("_ImDrawList_PathBezierCurveTo" ImDrawList_PathBezierCurveTo) :void
+  (self :pointer)
+  (p1 :pointer)
+  (p2 :pointer)
+  (p3 :pointer)
+  (num_segments :int))
 
-(cffi:defcfun ("_ImDrawList_PrimRectUV" _ImDrawList_PrimRectUV) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :pointer))
+(cffi:defcfun ("_ImDrawList_PathRect" ImDrawList_PathRect) :void
+  (self :pointer)
+  (rect_min :pointer)
+  (rect_max :pointer)
+  (rounding :float)
+  (rounding_corners_flags :int))
 
-(cffi:defcfun ("_ImDrawList_PrimQuadUV" _ImDrawList_PrimQuadUV) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer)
-  (larg5 :pointer)
-  (larg6 :pointer)
-  (larg7 :pointer)
-  (larg8 :pointer)
-  (larg9 :pointer)
-  (larg10 :pointer))
+(cffi:defcfun ("_ImDrawList_PrimQuadUV" ImDrawList_PrimQuadUV) :void
+  (self :pointer)
+  (a :pointer)
+  (b :pointer)
+  (c :pointer)
+  (d :pointer)
+  (uv_a :pointer)
+  (uv_b :pointer)
+  (uv_c :pointer)
+  (uv_d :pointer)
+  (col :pointer))
 
-(cffi:defcfun ("_ImDrawList_PrimWriteVtx" _ImDrawList_PrimWriteVtx) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer))
+(cffi:defcfun ("_ImDrawList_PrimWriteVtx" ImDrawList_PrimWriteVtx) :void
+  (self :pointer)
+  (pos :pointer)
+  (uv :pointer)
+  (col :pointer))
 
-(cffi:defcfun ("_ImDrawList_PrimVtx" _ImDrawList_PrimVtx) :void
-  (larg1 :pointer)
-  (larg2 :pointer)
-  (larg3 :pointer)
-  (larg4 :pointer))
+(cffi:defcfun ("_ImDrawList_PrimVtx" ImDrawList_PrimVtx) :void
+  (self :pointer)
+  (pos :pointer)
+  (uv :pointer)
+  (col :pointer))
 
-(cffi:defcfun ("_ImDrawData_ScaleClipRects" _ImDrawData_ScaleClipRects) :void
-  (larg1 :pointer)
-  (larg2 :pointer))
+(cffi:defcfun ("_ImDrawData_ScaleClipRects" ImDrawData_ScaleClipRects) :void
+  (self :pointer)
+  (fb_scale :pointer))
 
-(cffi:defcfun ("_igGetWindowPos" _igGetWindowPos) :pointer)
+(cffi:defcfun ("_igGetWindowPos" igGetWindowPos) :pointer)
 
-(cffi:defcfun ("_igGetWindowSize" _igGetWindowSize) :pointer)
+(cffi:defcfun ("_igGetWindowSize" igGetWindowSize) :pointer)
 
-(cffi:defcfun ("_igGetContentRegionMax" _igGetContentRegionMax) :pointer)
+(cffi:defcfun ("_igGetContentRegionMax" igGetContentRegionMax) :pointer)
 
-(cffi:defcfun ("_igGetContentRegionAvail" _igGetContentRegionAvail) :pointer)
+(cffi:defcfun ("_igGetContentRegionAvail" igGetContentRegionAvail) :pointer)
 
-(cffi:defcfun ("_igGetWindowContentRegionMin" _igGetWindowContentRegionMin) :pointer)
+(cffi:defcfun ("_igGetWindowContentRegionMin" igGetWindowContentRegionMin) :pointer)
 
-(cffi:defcfun ("_igGetWindowContentRegionMax" _igGetWindowContentRegionMax) :pointer)
+(cffi:defcfun ("_igGetWindowContentRegionMax" igGetWindowContentRegionMax) :pointer)
 
-(cffi:defcfun ("_igGetFontTexUvWhitePixel" _igGetFontTexUvWhitePixel) :pointer)
+(cffi:defcfun ("_igGetFontTexUvWhitePixel" igGetFontTexUvWhitePixel) :pointer)
 
-(cffi:defcfun ("_igGetCursorPos" _igGetCursorPos) :pointer)
+(cffi:defcfun ("_igGetCursorPos" igGetCursorPos) :pointer)
 
-(cffi:defcfun ("_igGetCursorStartPos" _igGetCursorStartPos) :pointer)
+(cffi:defcfun ("_igGetCursorStartPos" igGetCursorStartPos) :pointer)
 
-(cffi:defcfun ("_igGetCursorScreenPos" _igGetCursorScreenPos) :pointer)
+(cffi:defcfun ("_igGetCursorScreenPos" igGetCursorScreenPos) :pointer)
 
-(cffi:defcfun ("_igGetItemRectMin" _igGetItemRectMin) :pointer)
+(cffi:defcfun ("_igGetItemRectSize" igGetItemRectSize) :pointer)
 
-(cffi:defcfun ("_igGetItemRectMax" _igGetItemRectMax) :pointer)
+(cffi:defcfun ("_igGetItemRectMin" igGetItemRectMin) :pointer)
 
-(cffi:defcfun ("_igGetItemRectSize" _igGetItemRectSize) :pointer)
+(cffi:defcfun ("_igGetItemRectMax" igGetItemRectMax) :pointer)
 
-(cffi:defcfun ("_igCalcTextSize" _igCalcTextSize) :pointer
+(cffi:defcfun ("_igCalcTextSize" igCalcTextSize) :pointer
+  (text :string)
+  (text_end :string)
+  (hide_text_after_double_hash :pointer)
+  (wrap_width :float))
+
+(cffi:defcfun ("_igColorConvertU32ToFloat4" igColorConvertU32ToFloat4) :pointer
+  (in :pointer))
+
+(cffi:defcfun ("_igGetMousePos" igGetMousePos) :pointer)
+
+(cffi:defcfun ("_igGetMousePosOnOpeningCurrentPopup" igGetMousePosOnOpeningCurrentPopup) :pointer)
+
+(cffi:defcfun ("_igGetMouseDragDelta" igGetMouseDragDelta) :pointer
+  (button :int)
+  (lock_threshold :float))
+
+(cffi:defcfun ("_ImColor_HSV" ImColor_HSV) :pointer
+  (self :pointer)
+  (h :float)
+  (s :float)
+  (v :float)
+  (a :float))
+
+(cffi:defcfun ("_ImDrawList_GetClipRectMin" ImDrawList_GetClipRectMin) :pointer
+  (self :pointer))
+
+(cffi:defcfun ("_ImDrawList_GetClipRectMax" ImDrawList_GetClipRectMax) :pointer
+  (self :pointer))
+
+(cffi:defcfun ("_ImFont_CalcTextSizeA" ImFont_CalcTextSizeA) :pointer
+  (self :pointer)
+  (size :float)
+  (max_width :float)
+  (wrap_width :float)
+  (text_begin :string)
+  (text_end :string)
+  (remaining :pointer))
+
+(cffi:defcfun ("_igGetWindowPos_nonUDT2" igGetWindowPos_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetWindowSize_nonUDT2" igGetWindowSize_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetContentRegionMax_nonUDT2" igGetContentRegionMax_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetContentRegionAvail_nonUDT2" igGetContentRegionAvail_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetWindowContentRegionMin_nonUDT2" igGetWindowContentRegionMin_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetWindowContentRegionMax_nonUDT2" igGetWindowContentRegionMax_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetFontTexUvWhitePixel_nonUDT2" igGetFontTexUvWhitePixel_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetCursorPos_nonUDT2" igGetCursorPos_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetCursorStartPos_nonUDT2" igGetCursorStartPos_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetCursorScreenPos_nonUDT2" igGetCursorScreenPos_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetItemRectMin_nonUDT2" igGetItemRectMin_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igGetItemRectMax_nonUDT2" igGetItemRectMax_nonUDT2) :pointer)
+
+(cffi:defcfun ("_igCalcTextSize_nonUDT2" igCalcTextSize_nonUDT2) :pointer
   (larg1 :string)
   (larg2 :string)
   (larg3 :int)
   (larg4 :float))
 
-(cffi:defcfun ("_igColorConvertU32ToFloat4" _igColorConvertU32ToFloat4) :pointer
+(cffi:defcfun ("_igColorConvertU32ToFloat4_nonUDT2" igColorConvertU32ToFloat4_nonUDT2) :pointer
   (larg1 :pointer))
 
-(cffi:defcfun ("_igGetMousePos" _igGetMousePos) :pointer)
+(cffi:defcfun ("_igGetMousePos_nonUDT2" igGetMousePos_nonUDT2) :pointer)
 
-(cffi:defcfun ("_igGetMousePosOnOpeningCurrentPopup" _igGetMousePosOnOpeningCurrentPopup) :pointer)
+(cffi:defcfun ("_igGetMousePosOnOpeningCurrentPopup_nonUDT2" igGetMousePosOnOpeningCurrentPopup_nonUDT2) :pointer)
 
-(cffi:defcfun ("_igGetMouseDragDelta" _igGetMouseDragDelta) :pointer
+(cffi:defcfun ("_igGetMouseDragDelta_nonUDT2" igGetMouseDragDelta_nonUDT2) :pointer
   (larg1 :int)
   (larg2 :float))
 
-(cffi:defcfun ("_ImColor_HSV" _ImColor_HSV) :pointer
+(cffi:defcfun ("_ImColor_HSV_nonUDT2" ImColor_HSV_nonUDT2) :pointer
   (larg1 :pointer)
   (larg2 :float)
   (larg3 :float)
   (larg4 :float)
   (larg5 :float))
 
-(cffi:defcfun ("_ImDrawList_GetClipRectMin" _ImDrawList_GetClipRectMin) :pointer
+(cffi:defcfun ("_ImDrawList_GetClipRectMin_nonUDT2" ImDrawList_GetClipRectMin_nonUDT2) :pointer
   (larg1 :pointer))
 
-(cffi:defcfun ("_ImDrawList_GetClipRectMax" _ImDrawList_GetClipRectMax) :pointer
+(cffi:defcfun ("_ImDrawList_GetClipRectMax_nonUDT2" ImDrawList_GetClipRectMax_nonUDT2) :pointer
   (larg1 :pointer))
 
-(cffi:defcfun ("_ImFont_CalcTextSizeA" _ImFont_CalcTextSizeA) :pointer
+(cffi:defcfun ("_ImFont_CalcTextSizeA_nonUDT2" ImFont_CalcTextSizeA_nonUDT2) :pointer
   (larg1 :pointer)
   (larg2 :float)
   (larg3 :float)
@@ -4556,68 +4731,16 @@
   (larg6 :string)
   (larg7 :pointer))
 
-(cffi:defcfun ("_igGetWindowPos_nonUDT2" _igGetWindowPos_nonUDT2) :pointer)
+(cffi:defcfun ("_ImDrawList_PrimRect" ImDrawList_PrimRect) :void
+  (list :pointer)
+  (a :pointer)
+  (b :pointer)
+  (col :unsigned-int))
 
-(cffi:defcfun ("_igGetWindowSize_nonUDT2" _igGetWindowSize_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetContentRegionMax_nonUDT2" _igGetContentRegionMax_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetContentRegionAvail_nonUDT2" _igGetContentRegionAvail_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetWindowContentRegionMin_nonUDT2" _igGetWindowContentRegionMin_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetWindowContentRegionMax_nonUDT2" _igGetWindowContentRegionMax_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetFontTexUvWhitePixel_nonUDT2" _igGetFontTexUvWhitePixel_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetCursorPos_nonUDT2" _igGetCursorPos_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetCursorStartPos_nonUDT2" _igGetCursorStartPos_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetCursorScreenPos_nonUDT2" _igGetCursorScreenPos_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetItemRectMin_nonUDT2" _igGetItemRectMin_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetItemRectMax_nonUDT2" _igGetItemRectMax_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igCalcTextSize_nonUDT2" _igCalcTextSize_nonUDT2) :pointer
-  (larg1 :string)
-  (larg2 :string)
-  (larg3 :int)
-  (larg4 :float))
-
-(cffi:defcfun ("_igColorConvertU32ToFloat4_nonUDT2" _igColorConvertU32ToFloat4_nonUDT2) :pointer
-  (larg1 :pointer))
-
-(cffi:defcfun ("_igGetMousePos_nonUDT2" _igGetMousePos_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetMousePosOnOpeningCurrentPopup_nonUDT2" _igGetMousePosOnOpeningCurrentPopup_nonUDT2) :pointer)
-
-(cffi:defcfun ("_igGetMouseDragDelta_nonUDT2" _igGetMouseDragDelta_nonUDT2) :pointer
-  (larg1 :int)
-  (larg2 :float))
-
-(cffi:defcfun ("_ImColor_HSV_nonUDT2" _ImColor_HSV_nonUDT2) :pointer
-  (larg1 :pointer)
-  (larg2 :float)
-  (larg3 :float)
-  (larg4 :float)
-  (larg5 :float))
-
-(cffi:defcfun ("_ImDrawList_GetClipRectMin_nonUDT2" _ImDrawList_GetClipRectMin_nonUDT2) :pointer
-  (larg1 :pointer))
-
-(cffi:defcfun ("_ImDrawList_GetClipRectMax_nonUDT2" _ImDrawList_GetClipRectMax_nonUDT2) :pointer
-  (larg1 :pointer))
-
-(cffi:defcfun ("_ImFont_CalcTextSizeA_nonUDT2" _ImFont_CalcTextSizeA_nonUDT2) :pointer
-  (larg1 :pointer)
-  (larg2 :float)
-  (larg3 :float)
-  (larg4 :float)
-  (larg5 :string)
-  (larg6 :string)
-  (larg7 :pointer))
-
-
-
+(cffi:defcfun ("_ImDrawList_PrimRectUV" ImDrawList_PrimRectUV) :void
+  (list :pointer)
+  (a :pointer)
+  (b :pointer)
+  (uv_a :pointer)
+  (uv_b :pointer)
+  (col :unsigned-int))

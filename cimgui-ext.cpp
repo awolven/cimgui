@@ -3,6 +3,7 @@
 
 #include "./imgui/imgui_internal.h"
 
+
 CIMGUI_API int _igBeginChild (char *larg1, ImVec2 const *larg2, int larg3, ImGuiWindowFlags *larg4) {
   int lresult = (int)0 ;
   char *arg1 = (char *) 0 ;
@@ -24,13 +25,11 @@ CIMGUI_API int _igBeginChild (char *larg1, ImVec2 const *larg2, int larg3, ImGui
   }
 }
 
-CIMGUI_API void _igSetNextWindowPos (ImVec2 const *larg1, ImGuiCond *larg2, ImVec2 const *larg3) {
+CIMGUI_API void _igSetNextWindowPos (ImVec2 const *larg1, ImGuiCond arg2, ImVec2 const *larg3) {
   ImVec2 arg1 ;
-  ImGuiCond arg2 ;
   ImVec2 arg3 ;
   
   arg1 = *larg1;
-  arg2 = *larg2;
   arg3 = *larg3;
   try {
     igSetNextWindowPos(arg1,arg2,arg3);

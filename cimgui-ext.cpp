@@ -209,7 +209,7 @@ CIMGUI_API void _igTextColored (ImVec4 const *larg1, char *larg2) {
     
   }
 }
-
+/*
 CIMGUI_API void _igTextColoredV (ImVec4 const *larg1, char *larg2, va_list *larg3) {
   ImVec4 arg1 ;
   char *arg2 = (char *) 0 ;
@@ -225,7 +225,7 @@ CIMGUI_API void _igTextColoredV (ImVec4 const *larg1, char *larg2, va_list *larg
     
   }
 }
-
+*/
 CIMGUI_API int _igButton (char *larg1, ImVec2 const *larg2) {
   int lresult = (int)0 ;
   char *arg1 = (char *) 0 ;

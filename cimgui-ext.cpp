@@ -39,12 +39,10 @@ CIMGUI_API void _igSetNextWindowPos (ImVec2 const *larg1, ImGuiCond arg2, ImVec2
   }
 }
 
-CIMGUI_API void _igSetNextWindowSize (ImVec2 const *larg1, ImGuiCond *larg2) {
+CIMGUI_API void _igSetNextWindowSize (ImVec2 const *larg1, ImGuiCond arg2) {
   ImVec2 arg1 ;
-  ImGuiCond arg2 ;
   
   arg1 = *larg1;
-  arg2 = *larg2;
   try {
     igSetNextWindowSize(arg1,arg2);
     

@@ -46,10 +46,10 @@ CIMGUI_API void igSetCurrentContext(ImGuiContext* ctx)
 {
     return ImGui::SetCurrentContext(ctx);
 }
-CIMGUI_API bool igDebugCheckVersionAndDataLayout(const char* version_str,size_t sz_io,size_t sz_style,size_t sz_vec2,size_t sz_vec4,size_t sz_drawvert)
-{
-    return ImGui::DebugCheckVersionAndDataLayout(version_str,sz_io,sz_style,sz_vec2,sz_vec4,sz_drawvert);
-}
+/*CIMGUI_API bool igDebugCheckVersionAndDataLayout(const char* version, size_t sz_io, size_t sz_style, size_t sz_vec2, size_t sz_vec4, size_t sz_vert, size_t sz_idx)
+{	
+    return ImGui::DebugCheckVersionAndDataLayout(version,sz_io,sz_style,sz_vec2,sz_vec4,sz_vert, sz_idx);
+}*/
 CIMGUI_API ImGuiIO* igGetIO()
 {
     return &ImGui::GetIO();
@@ -182,10 +182,10 @@ CIMGUI_API ImVec2 igGetContentRegionAvail()
 {
     return ImGui::GetContentRegionAvail();
 }
-CIMGUI_API float igGetContentRegionAvailWidth()
+/*CIMGUI_API float igGetContentRegionAvailWidth()
 {
     return ImGui::GetContentRegionAvailWidth();
-}
+}*/
 CIMGUI_API ImVec2 igGetWindowContentRegionMin()
 {
     return ImGui::GetWindowContentRegionMin();
@@ -900,18 +900,19 @@ CIMGUI_API void igTreePop()
 {
     return ImGui::TreePop();
 }
-CIMGUI_API void igTreeAdvanceToLabelPos()
+/*CIMGUI_API void igTreeAdvanceToLabelPos()
 {
     return ImGui::TreeAdvanceToLabelPos();
-}
+}*/
 CIMGUI_API float igGetTreeNodeToLabelSpacing()
 {
     return ImGui::GetTreeNodeToLabelSpacing();
 }
-CIMGUI_API void igSetNextTreeNodeOpen(bool is_open,ImGuiCond cond)
+/*CIMGUI_API void igSetNextTreeNodeOpen(bool is_open,ImGuiCond cond)
 {
     return ImGui::SetNextTreeNodeOpen(is_open,cond);
 }
+*/
 CIMGUI_API bool igCollapsingHeader(const char* label,ImGuiTreeNodeFlags flags)
 {
     return ImGui::CollapsingHeader(label,flags);
@@ -1267,10 +1268,11 @@ CIMGUI_API int igGetFrameCount()
 {
     return ImGui::GetFrameCount();
 }
-CIMGUI_API ImDrawList* igGetOverlayDrawList()
+/*CIMGUI_API ImDrawList* igGetOverlayDrawList()
 {
     return ImGui::GetOverlayDrawList();
 }
+*/
 CIMGUI_API ImDrawListSharedData* igGetDrawListSharedData()
 {
     return ImGui::GetDrawListSharedData();
@@ -1555,7 +1557,7 @@ CIMGUI_API TextRange* TextRange_TextRangeStr(const char* _b,const char* _e)
 {
     return IM_NEW(TextRange)(_b,_e);
 }
-CIMGUI_API const char* TextRange_begin(TextRange* self)
+/*CIMGUI_API const char* TextRange_begin(TextRange* self)
 {
     return self->begin();
 }
@@ -1563,6 +1565,7 @@ CIMGUI_API const char* TextRange_end(TextRange* self)
 {
     return self->end();
 }
+*/
 CIMGUI_API bool TextRange_empty(TextRange* self)
 {
     return self->empty();
@@ -2119,18 +2122,18 @@ CIMGUI_API const ImWchar* ImFontAtlas_GetGlyphRangesThai(ImFontAtlas* self)
 {
     return self->GetGlyphRangesThai();
 }
-CIMGUI_API CustomRect* CustomRect_CustomRect(void)
+/*CIMGUI_API CustomRect* CustomRect_CustomRect(void)
 {
     return IM_NEW(CustomRect)();
-}
-CIMGUI_API void CustomRect_destroy(CustomRect* self)
+}*/
+/*CIMGUI_API void CustomRect_destroy(CustomRect* self)
 {
     IM_DELETE(self);
-}
-CIMGUI_API bool CustomRect_IsPacked(CustomRect* self)
+}*/
+/*CIMGUI_API bool CustomRect_IsPacked(CustomRect* self)
 {
     return self->IsPacked();
-}
+}*/
 CIMGUI_API int ImFontAtlas_AddCustomRectRegular(ImFontAtlas* self,unsigned int id,int width,int height)
 {
     return self->AddCustomRectRegular(id,width,height);
@@ -2139,14 +2142,14 @@ CIMGUI_API int ImFontAtlas_AddCustomRectFontGlyph(ImFontAtlas* self,ImFont* font
 {
     return self->AddCustomRectFontGlyph(font,id,width,height,advance_x,offset);
 }
-CIMGUI_API const CustomRect* ImFontAtlas_GetCustomRectByIndex(ImFontAtlas* self,int index)
+/*CIMGUI_API const CustomRect* ImFontAtlas_GetCustomRectByIndex(ImFontAtlas* self,int index)
 {
     return self->GetCustomRectByIndex(index);
-}
-CIMGUI_API void ImFontAtlas_CalcCustomRectUV(ImFontAtlas* self,const CustomRect* rect,ImVec2* out_uv_min,ImVec2* out_uv_max)
+}*/
+/*CIMGUI_API void ImFontAtlas_CalcCustomRectUV(ImFontAtlas* self,const CustomRect* rect,ImVec2* out_uv_min,ImVec2* out_uv_max)
 {
     return self->CalcCustomRectUV(rect,out_uv_min,out_uv_max);
-}
+}*/
 CIMGUI_API bool ImFontAtlas_GetMouseCursorTexData(ImFontAtlas* self,ImGuiMouseCursor cursor,ImVec2* out_offset,ImVec2* out_size,ImVec2 out_uv_border[2],ImVec2 out_uv_fill[2])
 {
     return self->GetMouseCursorTexData(cursor,out_offset,out_size,out_uv_border,out_uv_fill);
@@ -2479,14 +2482,14 @@ CIMGUI_API void ImVector_TextRange_destroy(ImVector_TextRange* self)
 {
     IM_DELETE(self);
 }
-CIMGUI_API ImVector_CustomRect* ImVector_CustomRect_ImVector_CustomRect(void)
+/*CIMGUI_API ImVector_CustomRect* ImVector_CustomRect_ImVector_CustomRect(void)
 {
     return IM_NEW(ImVector_CustomRect)();
 }
 CIMGUI_API void ImVector_CustomRect_destroy(ImVector_CustomRect* self)
 {
     IM_DELETE(self);
-}
+}*/
 CIMGUI_API ImVector_ImDrawChannel* ImVector_ImDrawChannel_ImVector_ImDrawChannel(void)
 {
     return IM_NEW(ImVector_ImDrawChannel)();
@@ -2595,10 +2598,10 @@ CIMGUI_API ImVector_TextRange* ImVector_TextRange_ImVector_TextRangeVector(const
 {
     return IM_NEW(ImVector_TextRange)(src);
 }
-CIMGUI_API ImVector_CustomRect* ImVector_CustomRect_ImVector_CustomRectVector(const ImVector_CustomRect src)
+/*CIMGUI_API ImVector_CustomRect* ImVector_CustomRect_ImVector_CustomRectVector(const ImVector_CustomRect src)
 {
     return IM_NEW(ImVector_CustomRect)(src);
-}
+}*/
 CIMGUI_API ImVector_ImDrawChannel* ImVector_ImDrawChannel_ImVector_ImDrawChannelVector(const ImVector_ImDrawChannel src)
 {
     return IM_NEW(ImVector_ImDrawChannel)(src);
@@ -2663,10 +2666,10 @@ CIMGUI_API bool ImVector_TextRange_empty(const ImVector_TextRange* self)
 {
     return self->empty();
 }
-CIMGUI_API bool ImVector_CustomRect_empty(const ImVector_CustomRect* self)
+/*CIMGUI_API bool ImVector_CustomRect_empty(const ImVector_CustomRect* self)
 {
     return self->empty();
-}
+}*/
 CIMGUI_API bool ImVector_ImDrawChannel_empty(const ImVector_ImDrawChannel* self)
 {
     return self->empty();
@@ -2713,71 +2716,71 @@ CIMGUI_API bool ImVector_ImVec2_empty(const ImVector_ImVec2* self)
 }
 CIMGUI_API int ImVector_float_size(const ImVector_float* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImWchar_size(const ImVector_ImWchar* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImFontConfig_size(const ImVector_ImFontConfig* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImFontGlyph_size(const ImVector_ImFontGlyph* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_TextRange_size(const ImVector_TextRange* self)
 {
-    return self->size();
+    return self->Size;
 }
-CIMGUI_API int ImVector_CustomRect_size(const ImVector_CustomRect* self)
+/*CIMGUI_API int ImVector_CustomRect_size(const ImVector_CustomRect* self)
 {
     return self->size();
-}
+}*/
 CIMGUI_API int ImVector_ImDrawChannel_size(const ImVector_ImDrawChannel* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_char_size(const ImVector_char* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImTextureID_size(const ImVector_ImTextureID* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImDrawVert_size(const ImVector_ImDrawVert* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_int_size(const ImVector_int* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_Pair_size(const ImVector_Pair* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImFontPtr_size(const ImVector_ImFontPtr* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImVec4_size(const ImVector_ImVec4* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImDrawCmd_size(const ImVector_ImDrawCmd* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImDrawIdx_size(const ImVector_ImDrawIdx* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_ImVec2_size(const ImVector_ImVec2* self)
 {
-    return self->size();
+    return self->Size;
 }
 CIMGUI_API int ImVector_float_size_in_bytes(const ImVector_float* self)
 {
@@ -2799,10 +2802,10 @@ CIMGUI_API int ImVector_TextRange_size_in_bytes(const ImVector_TextRange* self)
 {
     return self->size_in_bytes();
 }
-CIMGUI_API int ImVector_CustomRect_size_in_bytes(const ImVector_CustomRect* self)
+/*CIMGUI_API int ImVector_CustomRect_size_in_bytes(const ImVector_CustomRect* self)
 {
     return self->size_in_bytes();
-}
+}*/
 CIMGUI_API int ImVector_ImDrawChannel_size_in_bytes(const ImVector_ImDrawChannel* self)
 {
     return self->size_in_bytes();
@@ -2867,10 +2870,10 @@ CIMGUI_API int ImVector_TextRange_capacity(const ImVector_TextRange* self)
 {
     return self->capacity();
 }
-CIMGUI_API int ImVector_CustomRect_capacity(const ImVector_CustomRect* self)
+/*CIMGUI_API int ImVector_CustomRect_capacity(const ImVector_CustomRect* self)
 {
     return self->capacity();
-}
+}*/
 CIMGUI_API int ImVector_ImDrawChannel_capacity(const ImVector_ImDrawChannel* self)
 {
     return self->capacity();
@@ -2935,10 +2938,10 @@ CIMGUI_API void ImVector_TextRange_clear(ImVector_TextRange* self)
 {
     return self->clear();
 }
-CIMGUI_API void ImVector_CustomRect_clear(ImVector_CustomRect* self)
+/*CIMGUI_API void ImVector_CustomRect_clear(ImVector_CustomRect* self)
 {
     return self->clear();
-}
+}*/
 CIMGUI_API void ImVector_ImDrawChannel_clear(ImVector_ImDrawChannel* self)
 {
     return self->clear();
@@ -3003,10 +3006,10 @@ CIMGUI_API TextRange* ImVector_TextRange_begin(ImVector_TextRange* self)
 {
     return self->begin();
 }
-CIMGUI_API CustomRect* ImVector_CustomRect_begin(ImVector_CustomRect* self)
+/*CIMGUI_API CustomRect* ImVector_CustomRect_begin(ImVector_CustomRect* self)
 {
     return self->begin();
-}
+}*/
 CIMGUI_API ImDrawChannel* ImVector_ImDrawChannel_begin(ImVector_ImDrawChannel* self)
 {
     return self->begin();
@@ -3071,10 +3074,10 @@ CIMGUI_API TextRange const * ImVector_TextRange_begin_const(const ImVector_TextR
 {
     return self->begin();
 }
-CIMGUI_API CustomRect const * ImVector_CustomRect_begin_const(const ImVector_CustomRect* self)
+/*CIMGUI_API CustomRect const * ImVector_CustomRect_begin_const(const ImVector_CustomRect* self)
 {
     return self->begin();
-}
+}*/
 CIMGUI_API ImDrawChannel const * ImVector_ImDrawChannel_begin_const(const ImVector_ImDrawChannel* self)
 {
     return self->begin();
@@ -3139,10 +3142,10 @@ CIMGUI_API TextRange* ImVector_TextRange_end(ImVector_TextRange* self)
 {
     return self->end();
 }
-CIMGUI_API CustomRect* ImVector_CustomRect_end(ImVector_CustomRect* self)
+/*CIMGUI_API CustomRect* ImVector_CustomRect_end(ImVector_CustomRect* self)
 {
     return self->end();
-}
+}*/
 CIMGUI_API ImDrawChannel* ImVector_ImDrawChannel_end(ImVector_ImDrawChannel* self)
 {
     return self->end();
@@ -3207,10 +3210,10 @@ CIMGUI_API TextRange const * ImVector_TextRange_end_const(const ImVector_TextRan
 {
     return self->end();
 }
-CIMGUI_API CustomRect const * ImVector_CustomRect_end_const(const ImVector_CustomRect* self)
+/*CIMGUI_API CustomRect const * ImVector_CustomRect_end_const(const ImVector_CustomRect* self)
 {
     return self->end();
-}
+}*/
 CIMGUI_API ImDrawChannel const * ImVector_ImDrawChannel_end_const(const ImVector_ImDrawChannel* self)
 {
     return self->end();
@@ -3275,10 +3278,10 @@ CIMGUI_API TextRange* ImVector_TextRange_front(ImVector_TextRange* self)
 {
     return &self->front();
 }
-CIMGUI_API CustomRect* ImVector_CustomRect_front(ImVector_CustomRect* self)
+/*CIMGUI_API CustomRect* ImVector_CustomRect_front(ImVector_CustomRect* self)
 {
     return &self->front();
-}
+}*/
 CIMGUI_API ImDrawChannel* ImVector_ImDrawChannel_front(ImVector_ImDrawChannel* self)
 {
     return &self->front();
@@ -3343,10 +3346,10 @@ CIMGUI_API TextRange const * ImVector_TextRange_front_const(const ImVector_TextR
 {
     return &self->front();
 }
-CIMGUI_API CustomRect const * ImVector_CustomRect_front_const(const ImVector_CustomRect* self)
+/*CIMGUI_API CustomRect const * ImVector_CustomRect_front_const(const ImVector_CustomRect* self)
 {
     return &self->front();
-}
+}*/
 CIMGUI_API ImDrawChannel const * ImVector_ImDrawChannel_front_const(const ImVector_ImDrawChannel* self)
 {
     return &self->front();
@@ -3411,10 +3414,10 @@ CIMGUI_API TextRange* ImVector_TextRange_back(ImVector_TextRange* self)
 {
     return &self->back();
 }
-CIMGUI_API CustomRect* ImVector_CustomRect_back(ImVector_CustomRect* self)
+/*CIMGUI_API CustomRect* ImVector_CustomRect_back(ImVector_CustomRect* self)
 {
     return &self->back();
-}
+}*/
 CIMGUI_API ImDrawChannel* ImVector_ImDrawChannel_back(ImVector_ImDrawChannel* self)
 {
     return &self->back();
@@ -3479,10 +3482,10 @@ CIMGUI_API TextRange const * ImVector_TextRange_back_const(const ImVector_TextRa
 {
     return &self->back();
 }
-CIMGUI_API CustomRect const * ImVector_CustomRect_back_const(const ImVector_CustomRect* self)
+/*CIMGUI_API CustomRect const * ImVector_CustomRect_back_const(const ImVector_CustomRect* self)
 {
     return &self->back();
-}
+}*/
 CIMGUI_API ImDrawChannel const * ImVector_ImDrawChannel_back_const(const ImVector_ImDrawChannel* self)
 {
     return &self->back();
@@ -3547,10 +3550,10 @@ CIMGUI_API void ImVector_TextRange_swap(ImVector_TextRange* self,ImVector_TextRa
 {
     return self->swap(rhs);
 }
-CIMGUI_API void ImVector_CustomRect_swap(ImVector_CustomRect* self,ImVector_CustomRect rhs)
+/*CIMGUI_API void ImVector_CustomRect_swap(ImVector_CustomRect* self,ImVector_CustomRect rhs)
 {
     return self->swap(rhs);
-}
+}*/
 CIMGUI_API void ImVector_ImDrawChannel_swap(ImVector_ImDrawChannel* self,ImVector_ImDrawChannel rhs)
 {
     return self->swap(rhs);
@@ -3615,10 +3618,10 @@ CIMGUI_API int ImVector_TextRange__grow_capacity(const ImVector_TextRange* self,
 {
     return self->_grow_capacity(sz);
 }
-CIMGUI_API int ImVector_CustomRect__grow_capacity(const ImVector_CustomRect* self,int sz)
+/*CIMGUI_API int ImVector_CustomRect__grow_capacity(const ImVector_CustomRect* self,int sz)
 {
     return self->_grow_capacity(sz);
-}
+}*/
 CIMGUI_API int ImVector_ImDrawChannel__grow_capacity(const ImVector_ImDrawChannel* self,int sz)
 {
     return self->_grow_capacity(sz);
@@ -3683,10 +3686,10 @@ CIMGUI_API void ImVector_TextRange_resize(ImVector_TextRange* self,int new_size)
 {
     return self->resize(new_size);
 }
-CIMGUI_API void ImVector_CustomRect_resize(ImVector_CustomRect* self,int new_size)
+/*CIMGUI_API void ImVector_CustomRect_resize(ImVector_CustomRect* self,int new_size)
 {
     return self->resize(new_size);
-}
+}*/
 CIMGUI_API void ImVector_ImDrawChannel_resize(ImVector_ImDrawChannel* self,int new_size)
 {
     return self->resize(new_size);
@@ -3751,10 +3754,10 @@ CIMGUI_API void ImVector_TextRange_resizeT(ImVector_TextRange* self,int new_size
 {
     return self->resize(new_size,v);
 }
-CIMGUI_API void ImVector_CustomRect_resizeT(ImVector_CustomRect* self,int new_size,const CustomRect v)
+/*CIMGUI_API void ImVector_CustomRect_resizeT(ImVector_CustomRect* self,int new_size,const CustomRect v)
 {
     return self->resize(new_size,v);
-}
+}*/
 CIMGUI_API void ImVector_ImDrawChannel_resizeT(ImVector_ImDrawChannel* self,int new_size,const ImDrawChannel v)
 {
     return self->resize(new_size,v);
@@ -3819,10 +3822,10 @@ CIMGUI_API void ImVector_TextRange_reserve(ImVector_TextRange* self,int new_capa
 {
     return self->reserve(new_capacity);
 }
-CIMGUI_API void ImVector_CustomRect_reserve(ImVector_CustomRect* self,int new_capacity)
+/*CIMGUI_API void ImVector_CustomRect_reserve(ImVector_CustomRect* self,int new_capacity)
 {
     return self->reserve(new_capacity);
-}
+}*/
 CIMGUI_API void ImVector_ImDrawChannel_reserve(ImVector_ImDrawChannel* self,int new_capacity)
 {
     return self->reserve(new_capacity);
@@ -3887,10 +3890,10 @@ CIMGUI_API void ImVector_TextRange_push_back(ImVector_TextRange* self,const Text
 {
     return self->push_back(v);
 }
-CIMGUI_API void ImVector_CustomRect_push_back(ImVector_CustomRect* self,const CustomRect v)
+/*CIMGUI_API void ImVector_CustomRect_push_back(ImVector_CustomRect* self,const CustomRect v)
 {
     return self->push_back(v);
-}
+}*/
 CIMGUI_API void ImVector_ImDrawChannel_push_back(ImVector_ImDrawChannel* self,const ImDrawChannel v)
 {
     return self->push_back(v);
@@ -3955,10 +3958,10 @@ CIMGUI_API void ImVector_TextRange_pop_back(ImVector_TextRange* self)
 {
     return self->pop_back();
 }
-CIMGUI_API void ImVector_CustomRect_pop_back(ImVector_CustomRect* self)
+/*CIMGUI_API void ImVector_CustomRect_pop_back(ImVector_CustomRect* self)
 {
     return self->pop_back();
-}
+}*/
 CIMGUI_API void ImVector_ImDrawChannel_pop_back(ImVector_ImDrawChannel* self)
 {
     return self->pop_back();
@@ -4023,10 +4026,10 @@ CIMGUI_API void ImVector_TextRange_push_front(ImVector_TextRange* self,const Tex
 {
     return self->push_front(v);
 }
-CIMGUI_API void ImVector_CustomRect_push_front(ImVector_CustomRect* self,const CustomRect v)
+/*CIMGUI_API void ImVector_CustomRect_push_front(ImVector_CustomRect* self,const CustomRect v)
 {
     return self->push_front(v);
-}
+}*/
 CIMGUI_API void ImVector_ImDrawChannel_push_front(ImVector_ImDrawChannel* self,const ImDrawChannel v)
 {
     return self->push_front(v);
@@ -4091,10 +4094,10 @@ CIMGUI_API TextRange* ImVector_TextRange_erase(ImVector_TextRange* self,TextRang
 {
     return self->erase(it);
 }
-CIMGUI_API CustomRect* ImVector_CustomRect_erase(ImVector_CustomRect* self,CustomRect const * it)
+/*CIMGUI_API CustomRect* ImVector_CustomRect_erase(ImVector_CustomRect* self,CustomRect const * it)
 {
     return self->erase(it);
-}
+}*/
 CIMGUI_API ImDrawChannel* ImVector_ImDrawChannel_erase(ImVector_ImDrawChannel* self,ImDrawChannel const * it)
 {
     return self->erase(it);
@@ -4159,10 +4162,10 @@ CIMGUI_API TextRange* ImVector_TextRange_eraseTPtr(ImVector_TextRange* self,Text
 {
     return self->erase(it,it_last);
 }
-CIMGUI_API CustomRect* ImVector_CustomRect_eraseTPtr(ImVector_CustomRect* self,CustomRect const * it,CustomRect const * it_last)
+/*CIMGUI_API CustomRect* ImVector_CustomRect_eraseTPtr(ImVector_CustomRect* self,CustomRect const * it,CustomRect const * it_last)
 {
     return self->erase(it,it_last);
-}
+}*/
 CIMGUI_API ImDrawChannel* ImVector_ImDrawChannel_eraseTPtr(ImVector_ImDrawChannel* self,ImDrawChannel const * it,ImDrawChannel const * it_last)
 {
     return self->erase(it,it_last);
@@ -4227,10 +4230,10 @@ CIMGUI_API TextRange* ImVector_TextRange_erase_unsorted(ImVector_TextRange* self
 {
     return self->erase_unsorted(it);
 }
-CIMGUI_API CustomRect* ImVector_CustomRect_erase_unsorted(ImVector_CustomRect* self,CustomRect const * it)
+/*CIMGUI_API CustomRect* ImVector_CustomRect_erase_unsorted(ImVector_CustomRect* self,CustomRect const * it)
 {
     return self->erase_unsorted(it);
-}
+}*/
 CIMGUI_API ImDrawChannel* ImVector_ImDrawChannel_erase_unsorted(ImVector_ImDrawChannel* self,ImDrawChannel const * it)
 {
     return self->erase_unsorted(it);
@@ -4295,10 +4298,10 @@ CIMGUI_API TextRange* ImVector_TextRange_insert(ImVector_TextRange* self,TextRan
 {
     return self->insert(it,v);
 }
-CIMGUI_API CustomRect* ImVector_CustomRect_insert(ImVector_CustomRect* self,CustomRect const * it,const CustomRect v)
+/*CIMGUI_API CustomRect* ImVector_CustomRect_insert(ImVector_CustomRect* self,CustomRect const * it,const CustomRect v)
 {
     return self->insert(it,v);
-}
+}*/
 CIMGUI_API ImDrawChannel* ImVector_ImDrawChannel_insert(ImVector_ImDrawChannel* self,ImDrawChannel const * it,const ImDrawChannel v)
 {
     return self->insert(it,v);
@@ -4379,10 +4382,10 @@ CIMGUI_API int ImVector_TextRange_index_from_ptr(const ImVector_TextRange* self,
 {
     return self->index_from_ptr(it);
 }
-CIMGUI_API int ImVector_CustomRect_index_from_ptr(const ImVector_CustomRect* self,CustomRect const * it)
+/*CIMGUI_API int ImVector_CustomRect_index_from_ptr(const ImVector_CustomRect* self,CustomRect const * it)
 {
     return self->index_from_ptr(it);
-}
+}*/
 CIMGUI_API int ImVector_ImDrawChannel_index_from_ptr(const ImVector_ImDrawChannel* self,ImDrawChannel const * it)
 {
     return self->index_from_ptr(it);

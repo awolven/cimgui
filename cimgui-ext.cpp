@@ -419,7 +419,7 @@ CIMGUI_API void _igPlotHistogramFnPtr (char *larg1, float (*larg2)(void *,int), 
   }
 }
 
-CIMGUI_API int _igInputTextMultiline (char *larg1, char *larg2, size_t *larg3, ImVec2 const *larg4, ImGuiInputTextFlags *larg5, ImGuiInputTextCallback *larg6, void *larg7) {
+CIMGUI_API int _igInputTextMultiline (char *larg1, char *larg2, size_t larg3, ImVec2 const *larg4, ImGuiInputTextFlags larg5, ImGuiInputTextCallback larg6, void *larg7) {
   int lresult = (int)0 ;
   char *arg1 = (char *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -432,10 +432,10 @@ CIMGUI_API int _igInputTextMultiline (char *larg1, char *larg2, size_t *larg3, I
   
   arg1 = larg1;
   arg2 = larg2;
-  arg3 = *larg3;
+  arg3 = larg3;
   arg4 = *larg4;
-  arg5 = *larg5;
-  arg6 = *larg6;
+  arg5 = larg5;
+  arg6 = larg6;
   arg7 = larg7;
   try {
     result = (bool)igInputTextMultiline((char const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);

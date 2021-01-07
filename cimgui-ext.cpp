@@ -1609,6 +1609,29 @@ CIMGUI_API ImVec2 *_igCalcTextSize (char *larg1, char *larg2, bool larg3, float 
   }
 }
 
+CIMGUI_API void igCalcTextSize (char *larg1, char *larg2, bool larg3, float larg4, float &x, float &y) {
+  char *arg1 = (char *) 0 ;
+  char *arg2 = (char *) 0 ;
+  bool arg3 ;
+  float arg4 ;
+  ImVec2 result;
+  
+  arg1 = larg1;
+  arg2 = larg2;
+  arg3 = (bool)larg3;
+  arg4 = larg4;
+  try {
+    result = ImGui::CalcTextSize((char const *)arg1,(char const *)arg2,arg3,arg4);
+    x = result.x;
+    y = result.y;
+    return;
+  } catch (...) {
+    x = 0.0;
+    y = 0.0;      
+    return;
+  }
+}
+
 CIMGUI_API ImVec4 *_igColorConvertU32ToFloat4 (ImU32 *larg1) {
   ImVec4 * lresult = (ImVec4 *)0 ;
   ImU32 arg1 ;

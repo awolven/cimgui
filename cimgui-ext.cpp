@@ -134,6 +134,39 @@ CIMGUI_API int ImVector_ImGuiViewport_size(const ImVector<ImGuiViewport>* self)
 {
     return self->Size;
 }
+CIMGUI_API ImGuiWindow* igGetCurrentWindow() {
+  ImGuiWindow* window = ImGui::GetCurrentWindow();
+  return window;
+}
+CIMGUI_API ImGuiID igGetWindowID(ImGuiWindow* window, const char* name) {
+  ImGuiID id = window->GetID(name);
+  return id;
+}
+
+CIMGUI_API bool igBeginPopupModal2(const char* name, float x, float y, float pivot_x, float pivot_y, bool* p_open, ImGuiWindowFlags flags) {
+  ImGuiContext& g = *GImGui;
+  ImGuiWindow* window = g.CurrentWindow;
+  const ImGuiID id = window->GetID(name);
+  if (!ImGui::IsPopupOpen(id, ImGuiPopupFlags_None))
+    {
+      g.NextWindowData.ClearFlags();
+      return false;
+    }
+  ImVec2 pos = ImVec2(x, y);
+  ImGui::SetNextWindowPos(pos, ImGuiCond_Appearing, ImVec2(pivot_x, pivot_y));
+
+  flags |= ImGuiWindowFlags_Popup | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
+  const bool is_open = ImGui::Begin(name, p_open, flags);
+  if (!is_open || (p_open && !*p_open)) // NB: is_open can be 'false' when the popup is completely clipped (e.g. zero size display)
+    {
+      ImGui::EndPopup();
+      if (is_open)
+		  ImGui::ClosePopupToLevel(g.BeginPopupStack.Size, true);
+      return false;
+    }
+  return is_open;
+}
+
 CIMGUI_API bool igBeginChild (char *larg1, ImVec2 const *larg2, bool larg3, ImGuiWindowFlags *larg4) {
   bool lresult = (bool)0 ;
   char *arg1 = (char *) 0 ;
@@ -831,30 +864,18 @@ CIMGUI_API void ImDrawList_AddLine (ImDrawList *larg1, ImVec2 const *larg2, ImVe
 }
 
 
-CIMGUI_API void ImDrawList_AddRect (ImDrawList *larg1, ImVec2 const *larg2, ImVec2 const *larg3, ImU32 *larg4, float larg5, int larg6, float larg7) {
-  ImDrawList *arg1 = (ImDrawList *) 0 ;
-  ImVec2 arg2 ;
-  ImVec2 arg3 ;
-  ImU32 arg4 ;
-  float arg5 ;
-  int arg6 ;
-  float arg7 ;
-  
-  arg1 = larg1;
-  arg2 = *larg2;
-  arg3 = *larg3;
-  arg4 = *larg4;
-  arg5 = larg5;
-  arg6 = larg6;
-  arg7 = larg7;
+CIMGUI_API void ImDrawList_AddRect (ImDrawList *self, float p_min_x, float p_min_y, float p_max_x, float p_max_y, ImU32 col, float rounding, int rounding_corners, float thickness) {
+
+  ImVec2 p_min = ImVec2(p_min_x, p_min_y) ;
+  ImVec2 p_max = ImVec2(p_max_x, p_max_y) ;
+
   try {
-    arg1->AddRect(arg2,arg3,arg4,arg5,arg6,arg7);
+    self->AddRect(p_min, p_max, col, rounding, rounding_corners, thickness);
     
   } catch (...) {
     
   }
 }
-
 
 CIMGUI_API void ImDrawList_AddRectFilled (ImDrawList *larg1, ImVec2 const *larg2, ImVec2 const *larg3, ImU32 *larg4, float larg5, int larg6) {
   ImDrawList *arg1 = (ImDrawList *) 0 ;
@@ -1646,6 +1667,11 @@ CIMGUI_API ImVec4 *_igColorConvertU32ToFloat4 (ImU32 *larg1) {
     return (ImVec4 *)0;
   }
 }
+CIMGUI_API ImU32 igGetColorU32Vec4 (float r, float g, float b, float a)
+{
+	ImVec4 col = ImVec4(r, g, b, a);
+	return ImGui::GetColorU32(col);
+}
 
 CIMGUI_API ImVec2 *_igGetMousePos () {
   ImVec2 * lresult = (ImVec2 *)0 ;
@@ -1743,6 +1769,66 @@ CIMGUI_API ImVec2 *_ImDrawList_GetClipRectMax (ImDrawList *larg1) {
   } catch (...) {
     return (ImVec2 *)0;
   }
+}
+
+CIMGUI_API void ImFont_RenderChar(ImFont* self, ImDrawList* draw_list, float size, float pos_x, float pos_y, ImU32 col, ImWchar c) {
+  ImVec2 pos = ImVec2(pos_x, pos_y);
+
+  ImRect bb(ImVec2(pos_x, pos_y),ImVec2(pos_x + FLT_MAX, pos_y + ImGui::GetTextLineHeight()));
+  ImGui::ItemSize(ImVec2(size, size), 0.0f);
+  ImGui::ItemAdd(bb, 0);
+  self->RenderChar(draw_list,size,pos,col,c);
+  
+
+}
+
+CIMGUI_API void igRenderText (ImFont* font, float font_size, 
+	float pos_x, float pos_y, 
+	float r, float g, float b, float a,
+	const char* text, const char* text_end,
+	unsigned int start_index, unsigned int end_index)
+{
+	if (text != NULL)
+	{
+		ImGuiWindow* window = ImGui::GetCurrentWindow();
+		
+		if (text_end == NULL)
+			text_end = text + strlen(text);
+
+		ImVec2 pos = ImVec2(window->Pos.x + pos_x, window->Pos.y + pos_y);
+
+		int length = ImTextCountCharsFromUtf8(text, text_end);
+		if (end_index == UINT_MAX) 
+			end_index = (unsigned int)length;
+		
+		ImVec2 size = ImGui::CalcTextSize(text, text_end);
+
+		ImGui::ItemSize(size, 0.0f);
+		ImRect bb(pos, ImVec2(pos.x + size.x, pos.y + size.y));
+		float offset_x = 0.0f;		
+		for (unsigned int i = 0; i < end_index; i++) {
+			unsigned int c = 0;
+			text += ImTextCharFromUtf8(&c, text, text_end);
+			if (i >= start_index) {  // don't render char if it's below start, but still pull utf8 chars out to keep string square
+				if (c > 0 && c <= 0xFFFF) {
+					float advance = font->GetCharAdvance((ImWchar)c);
+					font->RenderChar(window->DrawList, font_size, ImVec2(pos.x + offset_x, pos.y), ImGui::GetColorU32(ImVec4(r, g, b, a)), (ImWchar)c);
+					offset_x += advance;
+				}
+			}
+		}
+		ImGui::ItemAdd(bb, 0);
+	}
+}
+
+CIMGUI_API void ImFont_RenderText(ImFont* self,ImDrawList* draw_list,
+				  float size, float pos_x, float pos_y, ImU32 col,
+				  float clip_rect_x, float clip_rect_y, float clip_rect_w, float clip_rect_h,
+				  const char* text_begin, const char* text_end, float wrap_width, bool cpu_fine_clip) {
+  
+  ImVec2 pos = ImVec2(pos_x, pos_y);
+  ImVec4 clip_rect = ImVec4(clip_rect_x, clip_rect_y, clip_rect_w, clip_rect_h);
+  self->RenderText(draw_list, size, pos, col, clip_rect, text_begin, text_end, wrap_width, cpu_fine_clip);
 }
 
 CIMGUI_API ImVec2 *_ImFont_CalcTextSizeA (ImFont *larg1, float larg2, float larg3, float larg4, char *larg5, char *larg6, char **larg7) {

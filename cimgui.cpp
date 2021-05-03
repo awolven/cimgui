@@ -278,10 +278,7 @@ CIMGUI_API ImU32 igGetColorU32(ImGuiCol idx,float alpha_mul)
 {
     return ImGui::GetColorU32(idx,alpha_mul);
 }
-CIMGUI_API ImU32 igGetColorU32Vec4(const ImVec4 col)
-{
-    return ImGui::GetColorU32(col);
-}
+
 CIMGUI_API ImU32 igGetColorU32U32(ImU32 col)
 {
     return ImGui::GetColorU32(col);
@@ -1912,14 +1909,6 @@ CIMGUI_API const char* ImFont_GetDebugName(ImFont* self)
 CIMGUI_API const char* ImFont_CalcWordWrapPositionA(ImFont* self,float scale,const char* text,const char* text_end,float wrap_width)
 {
     return self->CalcWordWrapPositionA(scale,text,text_end,wrap_width);
-}
-CIMGUI_API void ImFont_RenderChar(ImFont* self,ImDrawList* draw_list,float size,ImVec2 pos,ImU32 col,ImWchar c)
-{
-    return self->RenderChar(draw_list,size,pos,col,c);
-}
-CIMGUI_API void ImFont_RenderText(ImFont* self,ImDrawList* draw_list,float size,ImVec2 pos,ImU32 col,const ImVec4 clip_rect,const char* text_begin,const char* text_end,float wrap_width,bool cpu_fine_clip)
-{
-    return self->RenderText(draw_list,size,pos,col,clip_rect,text_begin,text_end,wrap_width,cpu_fine_clip);
 }
 CIMGUI_API void ImFont_BuildLookupTable(ImFont* self)
 {

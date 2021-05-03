@@ -978,7 +978,7 @@ CIMGUI_API const ImVec4* igGetStyleColorVec4(ImGuiCol idx);
 CIMGUI_API ImFont* igGetFont(void);
 CIMGUI_API float igGetFontSize(void);
 CIMGUI_API ImU32 igGetColorU32(ImGuiCol idx,float alpha_mul);
-CIMGUI_API ImU32 igGetColorU32Vec4(const ImVec4 col);
+
 CIMGUI_API ImU32 igGetColorU32U32(ImU32 col);
 CIMGUI_API void igPushItemWidth(float item_width);
 CIMGUI_API void igPopItemWidth(void);
@@ -1384,8 +1384,7 @@ CIMGUI_API bool ImFont_IsLoaded(ImFont* self);
 CIMGUI_API const char* ImFont_GetDebugName(ImFont* self);
 
 CIMGUI_API const char* ImFont_CalcWordWrapPositionA(ImFont* self,float scale,const char* text,const char* text_end,float wrap_width);
-CIMGUI_API void ImFont_RenderChar(ImFont* self,ImDrawList* draw_list,float size,ImVec2 pos,ImU32 col,ImWchar c);
-CIMGUI_API void ImFont_RenderText(ImFont* self,ImDrawList* draw_list,float size,ImVec2 pos,ImU32 col,const ImVec4 clip_rect,const char* text_begin,const char* text_end,float wrap_width,bool cpu_fine_clip);
+
 CIMGUI_API void ImFont_BuildLookupTable(ImFont* self);
 CIMGUI_API void ImFont_ClearOutputData(ImFont* self);
 CIMGUI_API void ImFont_GrowIndex(ImFont* self,int new_size);

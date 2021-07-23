@@ -304,6 +304,7 @@ CIMGUI_API void igSetWindowSizeStr (char *larg1, ImVec2 const *larg2, ImGuiCond 
   }
 }
 
+/*
 CIMGUI_API void igPushStyleColor (ImGuiCol *larg1, ImVec4 const *larg2) {
   ImGuiCol arg1 ;
   ImVec4 arg2 ;
@@ -316,6 +317,11 @@ CIMGUI_API void igPushStyleColor (ImGuiCol *larg1, ImVec4 const *larg2) {
   } catch (...) {
     
   }
+}
+*/
+CIMGUI_API void igPushStyleColor (ImGuiCol index, float r, float g, float b, float a) {
+  ImVec4 color = ImVec4(r, g, b, a);
+  ImGui::PushStyleColor(index, color);
 }
 
 CIMGUI_API void igPushStyleVarVec2 (ImGuiStyleVar *larg1, ImVec2 const *larg2) {

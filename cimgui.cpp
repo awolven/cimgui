@@ -797,22 +797,6 @@ CIMGUI_API bool igCollapsingHeaderBoolPtr(const char* label,bool* p_open,ImGuiTr
 {
     return ImGui::CollapsingHeader(label,p_open,flags);
 }
-CIMGUI_API bool igListBoxStr_arr(const char* label,int* current_item,const char* const items[],int items_count,int height_in_items)
-{
-    return ImGui::ListBox(label,current_item,items,items_count,height_in_items);
-}
-CIMGUI_API bool igListBoxFnPtr(const char* label,int* current_item,bool(*items_getter)(void* data,int idx,const char** out_text),void* data,int items_count,int height_in_items)
-{
-    return ImGui::ListBox(label,current_item,items_getter,data,items_count,height_in_items);
-}
-CIMGUI_API bool igListBoxHeaderInt(const char* label,int items_count,int height_in_items)
-{
-    return ImGui::ListBoxHeader(label,items_count,height_in_items);
-}
-CIMGUI_API void igListBoxFooter()
-{
-    return ImGui::ListBoxFooter();
-}
 
 CIMGUI_API void igValueBool(const char* prefix,bool b)
 {

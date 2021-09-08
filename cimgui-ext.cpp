@@ -730,14 +730,38 @@ CIMGUI_API bool igSelectableBoolPtr (char *larg1, bool *larg2, ImGuiSelectableFl
   }
 }
 
-CIMGUI_API bool igListBoxHeaderVec2 (char *larg1, ImVec2 const *larg2) {
+CIMGUI_API bool igListBox0(const char* label,
+				int* current_item,
+				const char* const items[],
+				int items_count,
+				int height_in_items) {
+  
+  return ImGui::ListBox(label, current_item, items, items_count, height_in_items);
+}
+
+CIMGUI_API bool igListBox1(const char* label,
+				int* current_item,
+				bool(*items_getter)(void* data,int idx,const char** out_text),
+				void* data,
+				int items_count,
+				int height_in_items) {
+  
+  return ImGui::ListBox(label, current_item, items_getter, data, items_count, height_in_items);
+}
+
+CIMGUI_API bool igBeginListBox0(const char* label, int items_count, int height_in_items) {
+
+  return ImGui::ListBoxHeader(label, items_count, height_in_items);
+}
+
+CIMGUI_API bool igBeginListBox1 (char *label, float *size_x, float *size_y) {
   bool lresult = (bool)0 ;
   char *arg1 = (char *) 0 ;
   ImVec2 arg2 ;
   bool result;
   
-  arg1 = larg1;
-  arg2 = *larg2;
+  arg1 = label;
+  arg2 = ImVec2(*size_x, *size_y);
   try {
     result = (bool)ImGui::ListBoxHeader((char const *)arg1,arg2);
     lresult = (bool)result;
@@ -745,6 +769,10 @@ CIMGUI_API bool igListBoxHeaderVec2 (char *larg1, ImVec2 const *larg2) {
   } catch (...) {
     return (bool)0;
   }
+}
+
+CIMGUI_API void igEndListBox() {
+  return ImGui::ListBoxFooter();
 }
 
 CIMGUI_API void igPushClipRect (ImVec2 const *larg1, ImVec2 const *larg2, bool larg3) {

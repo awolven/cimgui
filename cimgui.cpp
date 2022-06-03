@@ -808,11 +808,11 @@ CIMGUI_API void igValueInt(const char* prefix,int v)
 }
 CIMGUI_API void igValueUint(const char* prefix,unsigned int v)
 {
-    return ImGui::Value(prefix,v);
+     ImGui::Value(prefix,v);
 }
 CIMGUI_API void igValueFloat(const char* prefix,float v,const char* float_format)
 {
-    return ImGui::Value(prefix,v,float_format);
+     ImGui::Value(prefix,v,float_format);
 }
 CIMGUI_API bool igBeginMainMenuBar()
 {
@@ -820,7 +820,7 @@ CIMGUI_API bool igBeginMainMenuBar()
 }
 CIMGUI_API void igEndMainMenuBar()
 {
-    return ImGui::EndMainMenuBar();
+     ImGui::EndMainMenuBar();
 }
 CIMGUI_API bool igBeginMenuBar()
 {
@@ -828,7 +828,7 @@ CIMGUI_API bool igBeginMenuBar()
 }
 CIMGUI_API void igEndMenuBar()
 {
-    return ImGui::EndMenuBar();
+     ImGui::EndMenuBar();
 }
 CIMGUI_API bool igBeginMenu(const char* label,bool enabled)
 {
@@ -836,7 +836,7 @@ CIMGUI_API bool igBeginMenu(const char* label,bool enabled)
 }
 CIMGUI_API void igEndMenu()
 {
-    return ImGui::EndMenu();
+     ImGui::EndMenu();
 }
 CIMGUI_API bool igMenuItemBool(const char* label,const char* shortcut,bool selected,bool enabled)
 {
@@ -848,11 +848,11 @@ CIMGUI_API bool igMenuItemBoolPtr(const char* label,const char* shortcut,bool* p
 }
 CIMGUI_API void igBeginTooltip()
 {
-    return ImGui::BeginTooltip();
+     ImGui::BeginTooltip();
 }
 CIMGUI_API void igEndTooltip()
 {
-    return ImGui::EndTooltip();
+     ImGui::EndTooltip();
 }
 CIMGUI_API void igSetTooltip(const char* fmt,...)
 {
@@ -863,11 +863,11 @@ CIMGUI_API void igSetTooltip(const char* fmt,...)
 }
 CIMGUI_API void igSetTooltipV(const char* fmt,va_list args)
 {
-    return ImGui::SetTooltipV(fmt,args);
+     ImGui::SetTooltipV(fmt,args);
 }
-CIMGUI_API void igOpenPopup(const char* str_id)
+CIMGUI_API void igOpenPopup(const char* str_id, ImGuiPopupFlags popup_flags)
 {
-    return ImGui::OpenPopup(str_id);
+    ImGui::OpenPopup(str_id, popup_flags);
 }
 CIMGUI_API bool igBeginPopup(const char* str_id,ImGuiWindowFlags flags)
 {

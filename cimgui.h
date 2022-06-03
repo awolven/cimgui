@@ -1119,7 +1119,7 @@ CIMGUI_API void igBeginTooltip(void);
 CIMGUI_API void igEndTooltip(void);
 CIMGUI_API void igSetTooltip(const char* fmt,...);
 CIMGUI_API void igSetTooltipV(const char* fmt,va_list args);
-CIMGUI_API void igOpenPopup(const char* str_id);
+CIMGUI_API void igOpenPopup(const char* str_id, ImGuiPopupFlags popup_flags);
 CIMGUI_API bool igBeginPopup(const char* str_id,ImGuiWindowFlags flags);
 CIMGUI_API bool igBeginPopupContextItem(const char* str_id,int mouse_button);
 CIMGUI_API bool igBeginPopupContextWindow(const char* str_id,int mouse_button);

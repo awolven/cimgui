@@ -1469,29 +1469,28 @@ CIMGUI_API void _ImDrawData_ScaleClipRects (ImDrawData *larg1, ImVec2 const *lar
 }
 
 
-CIMGUI_API ImVec2 *_igGetWindowPos () {
-  ImVec2 * lresult = (ImVec2 *)0 ;
+CIMGUI_API void _igGetWindowPos (ImGuiWindow* window, float &x, float &y) {
   ImVec2 result;
   
   try {
-    result = ImGui::GetWindowPos();
-    lresult = new ImVec2(result);
-    return lresult;
+      result = window->Pos;
+    x = result.x;
+    y = result.y;
   } catch (...) {
-    return (ImVec2 *)0;
   }
 }
 
-CIMGUI_API ImVec2 *_igGetWindowSize () {
-  ImVec2 * lresult = (ImVec2 *)0 ;
+CIMGUI_API ImGuiWindow * _igFindWindowByName (const char * name) {
+  return ImGui::FindWindowByName(name);
+}
+
+CIMGUI_API void _igGetWindowSize (ImGuiWindow* window, float &w, float &h) {
   ImVec2 result;
-  
   try {
-    result = ImGui::GetWindowSize();
-    lresult = new ImVec2(result);
-    return lresult;
+    result = window->Size;
+    w = result.x;
+    h = result.y;
   } catch (...) {
-    return (ImVec2 *)0;
   }
 }
 
@@ -1837,6 +1836,9 @@ CIMGUI_API void igRenderText (ImFont* font, float font_size,
 		
 		ImVec2 size = ImGui::CalcTextSize(text, text_end);
 
+    const char* text1 = "X";
+    ImVec2 size1 = ImGui::CalcTextSize(text1, text1 + strlen(text1));
+
 		ImGui::ItemSize(size, 0.0f);
 		ImRect bb(pos, ImVec2(pos.x + size.x, pos.y + size.y));
 		float offset_x = 0.0f;		
@@ -1845,14 +1847,24 @@ CIMGUI_API void igRenderText (ImFont* font, float font_size,
 			text += ImTextCharFromUtf8(&c, text, text_end);
 			if (i >= start_index) {  // don't render char if it's below start, but still pull utf8 chars out to keep string square
 				if (c > 0 && c <= 0xFFFF) {
-					float advance = font->GetCharAdvance((ImWchar)c);
+					//float advance = font->GetCharAdvance((ImWchar)c);
 					font->RenderChar(window->DrawList, font_size, ImVec2(pos.x + offset_x, pos.y), ImGui::GetColorU32(ImVec4(r, g, b, a)), (ImWchar)c);
-					offset_x += advance;
+					offset_x += size1.x; //advance;
 				}
 			}
 		}
 		ImGui::ItemAdd(bb, 0);
 	}
+}
+
+CIMGUI_API void igRenderFrame (float p_min_x, float p_min_y, float p_max_x, float p_max_y, ImU32 fill_col, bool border, float rounding) {
+
+  ImGuiWindow* window = ImGui::GetCurrentWindow();
+  ImVec2 pos = window->Pos;
+  const ImRect bb(ImVec2(pos.x + p_min_x, pos.y + p_min_y), ImVec2(pos.x + p_max_x, pos.y + p_max_y));
+  ImGui::ItemAdd(bb, 0);
+  ImGui::RenderFrame(bb.Min, bb.Max, fill_col, border, rounding);
+
 }
 
 CIMGUI_API void ImFont_RenderText(ImFont* self,ImDrawList* draw_list,

@@ -1810,9 +1810,9 @@ CIMGUI_API void ImFont_RenderChar(ImFont* self, ImDrawList* draw_list, float siz
   ImRect bb(ImVec2(pos_x, pos_y),ImVec2(pos_x + FLT_MAX, pos_y + ImGui::GetTextLineHeight()));
   ImGui::ItemSize(ImVec2(size, size), 0.0f);
   ImGui::ItemAdd(bb, 0);
-  self->RenderChar(draw_list,size,pos,col,c);
-  
-
+  if (c != 13) {
+      self->RenderChar(draw_list, size, pos, col, c);
+  }
 }
 
 CIMGUI_API void igRenderText (ImFont* font, float font_size, 
@@ -1821,7 +1821,7 @@ CIMGUI_API void igRenderText (ImFont* font, float font_size,
 	const char* text, const char* text_end,
 	unsigned int start_index, unsigned int end_index)
 {
-	if (text != NULL)
+    	if (text != NULL)
 	{
 		ImGuiWindow* window = ImGui::GetCurrentWindow();
 		
@@ -1848,7 +1848,9 @@ CIMGUI_API void igRenderText (ImFont* font, float font_size,
 			if (i >= start_index) {  // don't render char if it's below start, but still pull utf8 chars out to keep string square
 				if (c > 0 && c <= 0xFFFF) {
 					//float advance = font->GetCharAdvance((ImWchar)c);
+                    
 					font->RenderChar(window->DrawList, font_size, ImVec2(pos.x + offset_x, pos.y), ImGui::GetColorU32(ImVec4(r, g, b, a)), (ImWchar)c);
+                    
 					offset_x += size1.x; //advance;
 				}
 			}
